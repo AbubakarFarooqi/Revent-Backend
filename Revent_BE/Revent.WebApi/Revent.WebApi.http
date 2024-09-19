@@ -1,0 +1,6 @@
+@Revent.WebApi_HostAddress = http://localhost:5113
+
+GET {{Revent.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
