@@ -1,0 +1,6 @@
+@Revent.Auth_HostAddress = http://localhost:5213
+
+GET {{Revent.Auth_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

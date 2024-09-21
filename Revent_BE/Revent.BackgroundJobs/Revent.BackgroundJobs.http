@@ -1,0 +1,6 @@
+@Revent.BackgroundJobs_HostAddress = http://localhost:5268
+
+GET {{Revent.BackgroundJobs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
