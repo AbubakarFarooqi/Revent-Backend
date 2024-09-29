@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <Folder Include="IRepositories\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="EFcoreScaffoldedModels\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 

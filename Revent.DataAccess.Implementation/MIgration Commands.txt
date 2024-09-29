@@ -1,0 +1,6 @@
+﻿// TO ADD MIGRATION
+Add-Migration <MigrationName> -Context YourDbContextName
+
+//TO UPDATE DATABASE i.e APPLY MIGRATION
+Update-Database -Context <YourDbContextName>
+

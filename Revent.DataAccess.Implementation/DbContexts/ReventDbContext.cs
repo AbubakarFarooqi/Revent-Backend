@@ -1,16 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Revent.EFCore.DataModel.Models;
 
-namespace Revent.DataAccess.Implementation.DbContexts
+namespace Revent.DataAccess.Implementation.DbContexts;
+
+public partial class ReventDbContext : DbContext
 {
-    public class ReventDbContext : DbContext
+    public ReventDbContext(DbContextOptions<ReventDbContext> options)
+        : base(options)
     {
-        public ReventDbContext(DbContextOptions options) : base(options)
-        {
-        }
     }
+
+    public virtual DbSet<Temp> Temp { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
