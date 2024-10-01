@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Revent.DataAccess.Implementation.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class updateAspNetUser_table : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,6 +31,8 @@ namespace Revent.DataAccess.Implementation.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    ProfilePicture = table.Column<string>(type: "text", nullable: false),
+                    FullName = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),

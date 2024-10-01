@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Revent.Common.CommonModels;
 
 namespace Revent.DataAccess.Implementation.DbContexts
 {
-    public class AuthDbContext:IdentityDbContext<IdentityUser, IdentityRole, string>
+    public class AuthDbContext:IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options)

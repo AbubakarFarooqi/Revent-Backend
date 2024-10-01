@@ -8,8 +8,8 @@ namespace Revent.Auth
     {
         internal static void RegisterServices(IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
            // services.AddScoped<IAspNetIdentityService, AspNetIdentityService>();
         }
     }

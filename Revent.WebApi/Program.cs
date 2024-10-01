@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Revent.DataAccess.Implementation.DbContexts;
 using System.Reflection;
+using Revent.Common.CommonModels;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -21,29 +22,29 @@ builder.Services.AddControllers()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddSwaggerGen(setup =>
-//{
-//    var jwtSecurityScheme = new OpenApiSecurityScheme
-//    {
-//        Scheme = JwtBearerDefaults.AuthenticationScheme,
-//        BearerFormat = "JWT",
-//        Name = "JWT Authentication",
-//        In = ParameterLocation.Header,
-//        Type = SecuritySchemeType.Http,
-//        Description = "provide jwt",
-//        Reference = new OpenApiReference
-//        {
-//            Id = "Bearer",
-//            Type = ReferenceType.SecurityScheme,
-//        }
+builder.Services.AddSwaggerGen(setup =>
+{
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        BearerFormat = "JWT",
+        Name = "JWT Authentication",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "provide jwt",
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme,
+        }
 
-//    };
-//    setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-//    setup.AddSecurityRequirement(new OpenApiSecurityRequirement
-//    {
-//        { jwtSecurityScheme ,Array.Empty<string>() }
-//    });
-//});
+    };
+    setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+    setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme ,Array.Empty<string>() }
+    });
+});
 
 //Add Auto Mapper 
 builder.Services.AddAutoMapper(typeof(Program));
@@ -56,7 +57,7 @@ builder.Services.AddDbContext<ReventDbContext>(options =>
     options.UseNpgsql(config.GetConnectionString("DefaultDbConnectionString"))
 );
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 

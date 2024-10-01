@@ -11,4 +11,9 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Revent.Common\Revent.Common.csproj" />
+    <ProjectReference Include="..\Revent.DataAccess.Implementation\Revent.DataAccess.Implementation.csproj" />
+  </ItemGroup>
+
 </Project>
