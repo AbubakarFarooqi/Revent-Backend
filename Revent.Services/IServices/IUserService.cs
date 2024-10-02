@@ -4,7 +4,7 @@ namespace Revent.Services.IServices
 {
     public interface IUserService
     {
-        Task AddUserAsync(UserRegistrationDto user, bool isAdmin = false);
+        Task<ApplicationUser?> AddUserAsync(UserRegistrationDto user, bool isAdmin = false);
         Task<List<string>?> GetUserRoles(ApplicationUser user);
         Task<ApplicationUser> AddUserWithoutPasswordAsync(UserRegistrationDto user);
         Task<ApplicationUser?> FindUserAsync(string email);

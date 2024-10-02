@@ -10,28 +10,34 @@ using System.Threading.Tasks;
 
 namespace Revent.DataAccess.Implementation.Repositories
 {
-    public class UserRepository : BaseRepository<ApplicationUser>, IUserRepository
+    public class UserRepository :IUserRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserRepository(ReventDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
-            : base(applicationDbContext)
+        public UserRepository(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
-        public  async Task AddAsync(ApplicationUser user, string password)
+        public  async Task<bool> AddAsync(ApplicationUser user, string password)
         {
-            await _userManager.CreateAsync(user, password);
+            return (await _userManager.CreateAsync(user, password)).Succeeded;
         }
 
-        public async Task AddToRoleAsync(ApplicationUser user, List<string> roles)
+        public async Task<bool> AddToRoleAsync(ApplicationUser user, List<string> roles)
         {
-            await _userManager.AddToRolesAsync(user, roles);
+            try
+            {
+                return (await _userManager.AddToRolesAsync(user, roles)).Succeeded;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
 
-        public async Task AddWithoutPasswordAsync(ApplicationUser user)
+        public async Task<bool> AddWithoutPasswordAsync(ApplicationUser user)
         {
-            await _userManager.CreateAsync(user);
+            return (await _userManager.CreateAsync(user)).Succeeded;
         }
 
         public async Task ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
@@ -51,12 +57,16 @@ namespace Revent.DataAccess.Implementation.Repositories
 
         public async Task<List<string>> GetRoleAsync(ApplicationUser user)
         {
-            return (List<string>) await _userManager.GetRolesAsync(user);
+           return (List<string>)await _userManager.GetRolesAsync(user);
         }
 
-        public async Task RemoveFromRoleAsync(ApplicationUser user, List<string> roles)
+        public async Task<bool> RemoveFromRoleAsync(ApplicationUser user, List<string> roles)
         {
-            await _userManager.RemoveFromRolesAsync(user, roles);
+            return (await _userManager.RemoveFromRolesAsync(user, roles)).Succeeded;
+        }
+        public  async Task DeleteAsync(ApplicationUser user)
+        {
+            await _userManager.DeleteAsync(user);
         }
     }
 }

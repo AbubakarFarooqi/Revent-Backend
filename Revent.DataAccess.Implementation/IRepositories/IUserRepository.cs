@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace Revent.DataAccess.Implementation.IRepositories
 {
-    public interface IUserRepository : IBaseRepository<ApplicationUser>
+    public interface IUserRepository 
     {
-        Task AddAsync(ApplicationUser user, string password);
-        Task AddWithoutPasswordAsync(ApplicationUser user);
-        Task AddToRoleAsync(ApplicationUser user, List<string> roles);
+        Task<bool> AddAsync(ApplicationUser user, string password);
+        Task<bool> AddWithoutPasswordAsync(ApplicationUser user);
+        Task<bool> AddToRoleAsync(ApplicationUser user, List<string> roles);
         Task<ApplicationUser?> FindAsync(string username);
         Task<List<string>> GetRoleAsync(ApplicationUser user);
-        Task RemoveFromRoleAsync(ApplicationUser user, List<string> roles);
+        Task<bool> RemoveFromRoleAsync(ApplicationUser user, List<string> roles);
         Task ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
         Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
+        Task DeleteAsync(ApplicationUser user);
     }
 }

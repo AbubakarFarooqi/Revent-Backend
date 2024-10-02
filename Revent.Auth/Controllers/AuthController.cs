@@ -1,28 +1,16 @@
 ﻿using Google.Apis.Auth;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OpenIddict.Abstractions;
-using OpenIddict.Core;
 using OpenIddict.Server.AspNetCore;
-using System.Net.Http;
-using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using static Revent.Auth.Controllers.AuthController;
 using Revent.Auth.DTOs;
 using Revent.Services.IServices;
 using Revent.Common.CommonDtos;
-using Microsoft.VisualBasic;
-using Microsoft.AspNetCore.Identity;
-using System.Xml.Linq;
 using Revent.Common.CommonModels;
 
 namespace Revent.Auth.Controllers
@@ -54,7 +42,7 @@ namespace Revent.Auth.Controllers
             try
             {
                 var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest() ??
-                          throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+                        throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
                 var identity = new ClaimsIdentity(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal();
@@ -139,6 +127,7 @@ namespace Revent.Auth.Controllers
         {
             try
             {
+
                 // Exchange the authorization code for an access token
                 var googleTokenResponse = await ExchangeCodeForTokenAsync(code);
 

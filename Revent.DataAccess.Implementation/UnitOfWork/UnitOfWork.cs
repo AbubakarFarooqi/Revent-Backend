@@ -27,7 +27,7 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
             _applicationDbContext = context;
             _userManager = userManager;
         }
-        public IUserRepository UserRepository => _userRepository ??= new UserRepository(_applicationDbContext, _userManager);
+        public IUserRepository UserRepository => _userRepository ??= new UserRepository( _userManager);
         public async Task BeginTransactionAsync()
         {
             if (_currentTransaction != null)

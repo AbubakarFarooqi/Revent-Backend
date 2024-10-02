@@ -26,7 +26,7 @@ namespace Revent.Services.Services
             _unitOfWork = unitOfWork;
             _configuration = configuration;
         }
-        public async Task AddUserAsync(UserRegistrationDto user, bool isAdmin = false)
+        public async Task<ApplicationUser?> AddUserAsync(UserRegistrationDto user, bool isAdmin = false)
         {
             try
             {
@@ -35,17 +35,26 @@ namespace Revent.Services.Services
                 var appUser = _mapper.Map<ApplicationUser>(user);
                 appUser.CreatedAt = DateTime.UtcNow;
                 appUser.UserName = user.Email;
-                
-                await _unitOfWork.UserRepository.AddAsync(appUser, user.Password);
 
-                if (isAdmin)    
-                    await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "admin"});
-                else
-                    await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "appUser" });
+                bool isUserAdded = await _unitOfWork.UserRepository.AddAsync(appUser, user.Password);
+
+                if (!isUserAdded) return null;
                 
+                bool isUserAddedInRole;
+                
+                if (isAdmin)
+                    isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "admin"});
+                else
+                    isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "appUser" });
+
+                if (!isUserAddedInRole)
+                {
+                    await _unitOfWork.UserRepository.DeleteAsync(appUser);
+                    return null;
+                }
                 await _unitOfWork.CommitTransactionAsync();
 
-                return;
+                return appUser;
             }
             catch (Exception ex)
             {
@@ -64,9 +73,17 @@ namespace Revent.Services.Services
                 appUser.CreatedAt = DateTime.UtcNow;
                 appUser.UserName = user.Email;
 
-                await _unitOfWork.UserRepository.AddWithoutPasswordAsync(appUser);
+                bool isUserAdded = await _unitOfWork.UserRepository.AddWithoutPasswordAsync(appUser);
+                
+                if (!isUserAdded) return null;
 
-                await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "appUser" });
+                bool isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "appUser1" });
+
+                if(!isUserAddedInRole) 
+                {
+                    await _unitOfWork.UserRepository.DeleteAsync(appUser);
+                    return null;
+                }
 
                 await _unitOfWork.CommitTransactionAsync();
 
@@ -127,7 +144,7 @@ namespace Revent.Services.Services
         {
             try
             {
-                var user = await _unitOfWork.UserRepository.GetAsync(email);
+                var user = await _unitOfWork.UserRepository.FindAsync(email);
                 
                 if (user == null) return null;
 
