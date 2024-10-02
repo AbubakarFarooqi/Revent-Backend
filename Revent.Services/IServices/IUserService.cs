@@ -11,5 +11,6 @@ namespace Revent.Services.IServices
         Task<UserProfileDto> GetUserProfileAsync(string email);
         //Task UpdateUserProfileAsync(UserProfileDto userProfile);
         Task ChangeUserPasswordAsync(ApplicationUser user, ChangePasswordDto model);
+        Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
     }
 }

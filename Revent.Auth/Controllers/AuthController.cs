@@ -22,6 +22,8 @@ using Revent.Services.IServices;
 using Revent.Common.CommonDtos;
 using Microsoft.VisualBasic;
 using Microsoft.AspNetCore.Identity;
+using System.Xml.Linq;
+using Revent.Common.CommonModels;
 
 namespace Revent.Auth.Controllers
 {
@@ -56,11 +58,13 @@ namespace Revent.Auth.Controllers
 
                 var identity = new ClaimsIdentity(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal();
+                ApplicationUser? user = null;
+
+                var email = openIdConnectRequest.Username;
 
                 if (openIdConnectRequest.IsClientCredentialsGrantType())
                 {
                     var name = openIdConnectRequest.GetParameter("name")?.ToString() ?? string.Empty;
-                    var email = openIdConnectRequest.GetParameter("email")?.ToString() ?? string.Empty;
                     var subject = openIdConnectRequest.GetParameter("subject")?.ToString() ?? string.Empty;
                     var picture = openIdConnectRequest.GetParameter("picture")?.ToString() ?? string.Empty;
 
@@ -68,8 +72,7 @@ namespace Revent.Auth.Controllers
                     if (string.IsNullOrEmpty(email)) throw new ArgumentException("The Email cannot be null or empty", nameof(email));
                     if (string.IsNullOrEmpty(subject)) throw new ArgumentException("The subject cannot be null or empty", nameof(subject));
 
-                    var user = await _userService.FindUserAsync(email);
-                    List<string>? userRoles;
+                    user = await _userService.FindUserAsync(email);
                     if (user == null) 
                     {
                         UserRegistrationDto userDto = new UserRegistrationDto
@@ -80,30 +83,47 @@ namespace Revent.Auth.Controllers
                         };
                         user = await _userService.AddUserWithoutPasswordAsync(userDto);
                     }
-                    userRoles = await _userService.GetUserRoles(user);
-                    var roleClaims = userRoles.Select(role => new Claim("role", role)).ToList();
                     
-                    var claims = new List<Claim>
-                    {
-                        new Claim(OpenIddictConstants.Claims.Subject, subject),
-                        new Claim(OpenIddictConstants.Claims.Name, name),
-                        new Claim(OpenIddictConstants.Claims.Email, email),
-                    };
-                    claims.AddRange(roleClaims);
-
-                    identity.AddClaims(claims);
-                    identity.SetDestinations(GetDestinations);
-                    principal = new ClaimsPrincipal(identity);
-                    principal.SetScopes(new[]
-                    {
-                        Scopes.OpenId,
-                        Scopes.Profile,
-                        Scopes.OfflineAccess,
-
-                    });
-
-                    identity.SetDestinations(GetDestinations);
                 }
+                else if (openIdConnectRequest.IsPasswordGrantType())
+                {
+                    var password = openIdConnectRequest.Password;
+
+                    if (string.IsNullOrEmpty(email)) throw new ArgumentException("The Email cannot be null or empty", nameof(email));
+                    if (string.IsNullOrEmpty(password)) throw new ArgumentException("The password cannot be null or empty", nameof(password));
+
+                    user = await _userService.FindUserAsync(email);
+                   
+                    if (user == null) return BadRequest();
+                    if (await _userService.CheckPasswordAsync(user,password ?? "")) return BadRequest();
+                   
+                }
+
+                if ( user == null) return BadRequest();
+                
+                List<string>? userRoles;
+
+                userRoles = await _userService.GetUserRoles(user);
+                var roleClaims = userRoles?.Select(role => new Claim("role", role)).ToList();
+
+                var claims = new List<Claim>
+                    {
+                        new Claim(OpenIddictConstants.Claims.Subject, email),
+                    };
+                
+                if(roleClaims != null) claims.AddRange(roleClaims);
+
+                identity.AddClaims(claims);
+                identity.SetDestinations(GetDestinations);
+                principal = new ClaimsPrincipal(identity);
+                principal.SetScopes(new[]
+                {
+                    Scopes.OpenId,
+                    Scopes.Profile,
+                    Scopes.OfflineAccess,
+                });
+
+                identity.SetDestinations(GetDestinations);
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
             catch(Exception ex)
@@ -140,7 +160,7 @@ namespace Revent.Auth.Controllers
                         new KeyValuePair<string, string>("client_id", config["AuthServer:AuthServerClientId"] ?? ""),
                         new KeyValuePair<string, string>("client_secret", config["AuthServer:AuthServerClientSecret"] ?? ""),
                         new KeyValuePair<string, string>("name", validPayload.Name),
-                        new KeyValuePair<string, string>("email", validPayload.Email),
+                        new KeyValuePair<string, string>("username", validPayload.Email),
                         new KeyValuePair<string, string>("subject", validPayload.Subject),
                         new KeyValuePair<string, string>("picture", validPayload.Picture)
                         })

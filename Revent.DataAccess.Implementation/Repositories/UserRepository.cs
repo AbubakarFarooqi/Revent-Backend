@@ -39,6 +39,11 @@ namespace Revent.DataAccess.Implementation.Repositories
             await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
 
+        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+        {
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
+
         public async Task<ApplicationUser?> FindAsync(string username)
         {
             return await _userManager.FindByEmailAsync(username);

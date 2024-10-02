@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Revent.Common.CommonDtos;
 using Revent.Common.CommonModels;
+using Revent.DataAccess.Implementation.Migrations;
 using Revent.DataAccess.Implementation.UnitOfWork;
 using Revent.Services.IServices;
 using System;
@@ -111,6 +112,12 @@ namespace Revent.Services.Services
             }
 
         }
+
+        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+        {
+            return await _unitOfWork.UserRepository.CheckPasswordAsync(user, password);
+        }
+
         public async Task<ApplicationUser?> FindUserAsync(string email)
         {
             return await _unitOfWork.UserRepository.FindAsync(email);

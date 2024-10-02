@@ -16,5 +16,6 @@ namespace Revent.DataAccess.Implementation.IRepositories
         Task<List<string>> GetRoleAsync(ApplicationUser user);
         Task RemoveFromRoleAsync(ApplicationUser user, List<string> roles);
         Task ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
+        Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
     }
 }
