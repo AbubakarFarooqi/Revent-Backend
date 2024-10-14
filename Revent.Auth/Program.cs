@@ -21,6 +21,14 @@ builder.Services.AddSwaggerGen();
 
 //Add Auto Mapper 
 builder.Services.AddAutoMapper(Assembly.Load("Revent.Common"));
+
+//Add Redis Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = config.GetConnectionString("RedisCacheSettings:ConnectionString");
+    options.InstanceName = config["RedisCacheSettings:InstanceName"];
+});
+
 // Configures ASP.NET Identity Framework
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
@@ -66,6 +74,31 @@ builder.Services.AddOpenIddict()
         // For those users which don't send client id and secret
         options.AcceptAnonymousClients();
     });
+
+// configuring Identity Options
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // SignIn settings
+    options.SignIn.RequireConfirmedAccount = true; // Set to true if you require email confirmation
+});
+
+
 
 // Configure Services
 builder.Host.ConfigureServices(Revent.Auth.ServiceRegistration.RegisterServices);

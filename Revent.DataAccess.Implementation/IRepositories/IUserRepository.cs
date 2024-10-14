@@ -13,7 +13,7 @@ namespace Revent.DataAccess.Implementation.IRepositories
         Task<bool> AddWithoutPasswordAsync(ApplicationUser user);
         Task<bool> AddToRoleAsync(ApplicationUser user, List<string> roles);
         Task<ApplicationUser?> FindAsync(string username);
-        Task<List<string>> GetRoleAsync(ApplicationUser user);
+        Task<List<string>> GetUserRolesAsync(ApplicationUser user);
         Task<bool> RemoveFromRoleAsync(ApplicationUser user, List<string> roles);
         Task ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
         Task<bool> CheckPasswordAsync(ApplicationUser user, string password);

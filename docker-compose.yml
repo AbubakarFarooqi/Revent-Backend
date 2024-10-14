@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  revent.auth:
+    image: ${DOCKER_REGISTRY-}reventauth
+    build:
+      context: .
+      dockerfile: Revent.Auth/Dockerfile
+
+  revent.webapi:
+    image: ${DOCKER_REGISTRY-}reventwebapi
+    build:
+      context: .
+      dockerfile: Revent.WebApi/Dockerfile
+

@@ -55,7 +55,7 @@ namespace Revent.DataAccess.Implementation.Repositories
             return await _userManager.FindByEmailAsync(username);
         }
 
-        public async Task<List<string>> GetRoleAsync(ApplicationUser user)
+        public async Task<List<string>> GetUserRolesAsync(ApplicationUser user)
         {
            return (List<string>)await _userManager.GetRolesAsync(user);
         }

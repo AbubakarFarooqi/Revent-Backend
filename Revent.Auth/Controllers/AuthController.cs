@@ -83,7 +83,7 @@ namespace Revent.Auth.Controllers
                     user = await _userService.FindUserAsync(email);
                    
                     if (user == null) return BadRequest();
-                    if (await _userService.CheckPasswordAsync(user,password ?? "")) return BadRequest();
+                    if (!await _userService.CheckPasswordAsync(user,password ?? "")) return BadRequest();
                    
                 }
 
@@ -176,11 +176,6 @@ namespace Revent.Auth.Controllers
                 return Redirect("http://localhost:3000/failedGoogleAuth");
             }
         }
-
-
-
-
-
 
 
        /* [HttpPost]

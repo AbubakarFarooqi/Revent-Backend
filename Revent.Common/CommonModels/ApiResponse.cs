@@ -10,7 +10,7 @@ namespace Revent.Common.CommonModels
     {
         public T? Data { get; set; }
         public string Message { get; set; } = string.Empty;
-        public int StatusCode { get; set; }
+        public int StatusCode = 200;
 
     }
 }

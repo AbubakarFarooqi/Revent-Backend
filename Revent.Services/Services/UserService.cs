@@ -148,7 +148,7 @@ namespace Revent.Services.Services
                 
                 if (user == null) return null;
 
-                var userRoles = await _unitOfWork.UserRepository.GetRoleAsync(user);
+                var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
 
                 UserProfileDto userProfile = _mapper.Map<UserProfileDto>(user);
                 userProfile.Roles = userRoles;
@@ -163,7 +163,7 @@ namespace Revent.Services.Services
 
         public async Task<List<string>?> GetUserRoles(ApplicationUser user)
         {
-            return await _unitOfWork.UserRepository.GetRoleAsync(user);
+            return await _unitOfWork.UserRepository.GetUserRolesAsync(user);
         }
 
         /* public async Task UpdateUserProfileAsync(UserProfileDto userProfile)

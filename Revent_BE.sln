@@ -13,13 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.DataAccess.Implement
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceLayer", "ServiceLayer", "{FFD4DFBD-1A68-46BC-AFB5-6D9FF9FCB235}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.Services", "Revent.Services\Revent.Services.csproj", "{2B2231C9-D8ED-4920-B63D-95C7C39F1158}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.Services", "Revent.Services\Revent.Services.csproj", "{2B2231C9-D8ED-4920-B63D-95C7C39F1158}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.Auth", "Revent.Auth\Revent.Auth.csproj", "{AB42097F-0DC6-4B0B-BF44-0D2300638DC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.Auth", "Revent.Auth\Revent.Auth.csproj", "{AB42097F-0DC6-4B0B-BF44-0D2300638DC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.BackgroundJobs", "Revent.BackgroundJobs\Revent.BackgroundJobs.csproj", "{62E595BC-BE72-468E-92B6-4C9511361445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.BackgroundJobs", "Revent.BackgroundJobs\Revent.BackgroundJobs.csproj", "{62E595BC-BE72-468E-92B6-4C9511361445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.Common", "Revent.Common\Revent.Common.csproj", "{65F1C80B-7456-4CEC-8BDB-6C3A8B3934F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.Common", "Revent.Common\Revent.Common.csproj", "{65F1C80B-7456-4CEC-8BDB-6C3A8B3934F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94C6645A-051A-4946-AB97-981F4206841B}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{27E773CA-05CC-43AC-8A85-5C9DB6A08834}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,10 @@ Global
 		{65F1C80B-7456-4CEC-8BDB-6C3A8B3934F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65F1C80B-7456-4CEC-8BDB-6C3A8B3934F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65F1C80B-7456-4CEC-8BDB-6C3A8B3934F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

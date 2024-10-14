@@ -48,6 +48,14 @@ builder.Services.AddSwaggerGen(setup =>
 
 //Add Auto Mapper 
 builder.Services.AddAutoMapper(typeof(Program));
+
+//Add Redis Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = config.GetConnectionString("RedisCacheSettings:ConnectionString");
+    options.InstanceName = config["RedisCacheSettings:InstanceName"];
+});
+
 // Configure database contexts
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseNpgsql(config.GetConnectionString("DefaultDbConnectionString"))
@@ -117,11 +125,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles(new StaticFileOptions
+/*app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(contentPath),
-    RequestPath = "/content"
-});
+    RequestPath = "/Content"
+});*/
 
 app.UseCors("AllowSpecificOrigin");
 
