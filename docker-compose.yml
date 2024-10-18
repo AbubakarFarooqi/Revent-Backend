@@ -1,4 +1,17 @@
-version: '3.4'
+# version: '3.4'
+
+# services:
+#   revent.auth:
+#     image: ${DOCKER_REGISTRY-}reventauth
+#     build:
+#       context: .
+#       dockerfile: Revent.Auth/Dockerfile
+
+#   revent.webapi:
+#     image: ${DOCKER_REGISTRY-}reventwebapi
+#     build:
+#       context: .
+#       dockerfile: Revent.WebApi/Dockerfile
 
 services:
   revent.auth:
@@ -12,4 +25,22 @@ services:
     build:
       context: .
       dockerfile: Revent.WebApi/Dockerfile
+
+  postgres:
+    image: postgres:16.3
+    container_name: my_postgres
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=reventDb
+    volumes:
+      - ./DatabaseFolder/pgdata:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
 

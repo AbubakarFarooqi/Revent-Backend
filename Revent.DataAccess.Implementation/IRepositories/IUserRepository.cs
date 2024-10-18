@@ -1,4 +1,5 @@
-﻿using Revent.Common.CommonModels;
+﻿using Microsoft.AspNetCore.Identity;
+using Revent.EFCore.DataModel.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,18 @@ namespace Revent.DataAccess.Implementation.IRepositories
 {
     public interface IUserRepository 
     {
-        Task<bool> AddAsync(ApplicationUser user, string password);
-        Task<bool> AddWithoutPasswordAsync(ApplicationUser user);
-        Task<bool> AddToRoleAsync(ApplicationUser user, List<string> roles);
-        Task<ApplicationUser?> FindAsync(string username);
-        Task<List<string>> GetUserRolesAsync(ApplicationUser user);
-        Task<bool> RemoveFromRoleAsync(ApplicationUser user, List<string> roles);
-        Task ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
-        Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
-        Task DeleteAsync(ApplicationUser user);
+        Task<bool> AddAspUserAsync(IdentityUser user, string password);
+        bool AddAppUserAsync(Users user);
+        Task<bool> AddToRoleAsync(IdentityUser user, List<string> roles);
+
+        Task<bool> AddWithoutPasswordAsync(IdentityUser user);
+        Task<Users?> FindByEmailAsync(string email);
+        Task<List<string>> GetUserRolesAsync(IdentityUser user);
+        //Task<bool> RemoveFromRoleAsync(ApplicationUser user, List<string> roles);
+        Task ChangePasswordAsync(IdentityUser user, string currentPassword, string newPassword);
+        Task<bool> CheckPasswordAsync(IdentityUser user, string password);
+        Task DeleteAspUserAsync(IdentityUser user);
+
+        Task<IdentityUser> GetIdentityUser(string userId);
     }
 }

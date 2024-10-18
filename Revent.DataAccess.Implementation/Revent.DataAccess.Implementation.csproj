@@ -21,8 +21,9 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
   </ItemGroup>
 
+
   <ItemGroup>
-    <ProjectReference Include="..\Revent.Common\Revent.Common.csproj" />
+    <Folder Include="EFCoreScaffoldedModels\" />
   </ItemGroup>
 
 </Project>

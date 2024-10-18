@@ -30,7 +30,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 // Configures ASP.NET Identity Framework
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 
@@ -101,8 +101,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 
 // Configure Services
-builder.Host.ConfigureServices(Revent.Auth.ServiceRegistration.RegisterServices);
-
+//builder.Host.ConfigureServices(Revent.Auth.ServiceRegistration.RegisterServices);
+builder.Host.ConfigureServices((context, services) =>
+    Revent.Auth.ServiceRegistration.RegisterServices(services, context.Configuration)
+);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>

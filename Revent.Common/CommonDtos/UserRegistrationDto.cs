@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using Revent.Common.CustomValidationAttributes;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Revent.Common.CommonDtos
 {
@@ -14,11 +11,18 @@ namespace Revent.Common.CommonDtos
         public string Email { get; set; }
 
         [StringLength(255)]
-        public string? Password { get; set; }
+        public string Password { get; set; }
 
         [Required(ErrorMessage = "Firstname is required")]
         [StringLength(50)]
-        public string FullName { get; set; }
-        public string? ProfilePicture { get; set; }
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "LastName is required")]
+        [StringLength(50)]
+        public string LastName { get; set; }
+
+        [AllowedExtensionForPictures(new string[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile? ProfileImage { get; set; }
+        public string? ProfileImageUrl { get; set; }
     }
 }

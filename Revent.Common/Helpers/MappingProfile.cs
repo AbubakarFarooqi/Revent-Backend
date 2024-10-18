@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Revent.Common.CommonDtos;
 using Revent.Common.CommonModels;
+using Revent.EFCore.DataModel.Models;
 
 
 namespace Revent.Common.Helpers
@@ -9,10 +10,13 @@ namespace Revent.Common.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<UserRegistrationDto, ApplicationUser>();
-            CreateMap<ApplicationUser, UserProfileDto>();
+            CreateMap<UserRegistrationDto, Users>()
+                .ForMember(dest => dest.Profileimage , opt => opt.MapFrom(src => src.ProfileImageUrl))
+                .ForMember(dest => dest.Firstname , opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.Firstname , opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.Lastname , opt => opt.MapFrom(src => src.LastName));
 
-            //CreateMap<Review, ReviewGetDto>();
+
         }
     }
 }

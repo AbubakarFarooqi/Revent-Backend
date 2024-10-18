@@ -12,6 +12,8 @@ using Revent.Auth.DTOs;
 using Revent.Services.IServices;
 using Revent.Common.CommonDtos;
 using Revent.Common.CommonModels;
+using Microsoft.AspNetCore.Identity;
+using Revent.EFCore.DataModel.Models;
 
 namespace Revent.Auth.Controllers
 {
@@ -24,8 +26,9 @@ namespace Revent.Auth.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IOpenIddictApplicationManager _applicationManager;
         private readonly IUserService _userService;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthController(IConfiguration config, HttpClient httpClient, IHttpClientFactory httpClientFactory, IOpenIddictApplicationManager applicationManager,IUserService userService
+        public AuthController(IConfiguration config, HttpClient httpClient, IHttpClientFactory httpClientFactory, IOpenIddictApplicationManager applicationManager,IUserService userService, RoleManager<IdentityRole> roleManager
             )
         {
             this.config = config;
@@ -33,10 +36,11 @@ namespace Revent.Auth.Controllers
             _httpClientFactory = httpClientFactory;
             _applicationManager = applicationManager;
             _userService = userService;
+            _roleManager = roleManager;
         }
 
         [HttpPost]
-        [Route("connect/Token")]
+        [Route("connect/token")]
         public async Task<IActionResult> ConnectToken()
         {
             try
@@ -46,7 +50,7 @@ namespace Revent.Auth.Controllers
 
                 var identity = new ClaimsIdentity(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal();
-                ApplicationUser? user = null;
+                Users? user = null;
 
                 var email = openIdConnectRequest.Username;
 
@@ -65,9 +69,10 @@ namespace Revent.Auth.Controllers
                     {
                         UserRegistrationDto userDto = new UserRegistrationDto
                         {
-                            FullName = name,
+                            FirstName = name,
+                            LastName = " ",
                             Email = email,
-                            ProfilePicture = picture,
+                            ProfileImageUrl = picture,
                         };
                         user = await _userService.AddUserWithoutPasswordAsync(userDto);
                     }
@@ -97,6 +102,7 @@ namespace Revent.Auth.Controllers
                 var claims = new List<Claim>
                     {
                         new Claim(OpenIddictConstants.Claims.Subject, email),
+                        new Claim("publicId", user.Aspnetuserid),
                     };
                 
                 if(roleClaims != null) claims.AddRange(roleClaims);
@@ -178,8 +184,10 @@ namespace Revent.Auth.Controllers
         }
 
 
-       /* [HttpPost]
-        public async Task<IActionResult> RegisterApplication() 
+        [HttpPost]
+        [Route("api/auth/RegisterApplication")]
+
+        public IActionResult RegisterApplication()
         {
             _applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
@@ -187,16 +195,41 @@ namespace Revent.Auth.Controllers
                 ClientSecret = "AuthServerClient",
                 DisplayName = "AuthServerClient",
                 Permissions =
-                    {
-                        Permissions.Endpoints.Token,
-                        Permissions.GrantTypes.ClientCredentials,
-                        Permissions.GrantTypes.RefreshToken,
-                        Permissions.GrantTypes.Password,
-                        Permissions.Prefixes.Scope + "api",
-                        Permissions.Prefixes.Scope + Scopes.OfflineAccess,
-                    },
+                     {
+                         Permissions.Endpoints.Token,
+                         Permissions.GrantTypes.ClientCredentials,
+                         Permissions.GrantTypes.RefreshToken,
+                         Permissions.GrantTypes.Password,
+                         Permissions.Prefixes.Scope + "api",
+                         Permissions.Prefixes.Scope + Scopes.OfflineAccess,
+                     },
             }).GetAwaiter().GetResult();
-        }*/
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("api/auth/CreateRole")]
+        public async Task<IActionResult> CreateRole(string roleName)
+        {
+            // Check if the role already exists
+            if (await _roleManager.RoleExistsAsync(roleName))
+            {
+                return BadRequest("Role already exists.");
+            }
+
+            // Create the role
+            var role = new IdentityRole(roleName);
+            var result = await _roleManager.CreateAsync(role);
+
+            if (result.Succeeded)
+            {
+                return Ok("Role created successfully.");
+            }
+
+            return BadRequest("Failed to create role.");
+        }
+
+        #region PrivateMethods
         private async Task<GoogleJsonWebSignature.Payload> ValidateGoogleToken(string token)
         {
             var googleSection = config.GetSection("Authentication:Google:WebApp");
@@ -214,7 +247,10 @@ namespace Revent.Auth.Controllers
 
             var clientId = googleSection["ClientId"];
             var clientSecret = googleSection["ClientSecret"];
-            var redirectUri = "https://localhost:7068/api/auth/google/callback";
+
+            var portNo = HttpContext.Request.Host.Port;
+            var redirectUri = $"http://localhost:{portNo}/api/auth/google/callback";
+            //var redirectUri = "https://localhost:7068/api/auth/google/callback";
 
             var requestData = new StringContent(JsonConvert.SerializeObject(new
             {
@@ -237,6 +273,8 @@ namespace Revent.Auth.Controllers
         {
             return new[] { Destinations.AccessToken, Destinations.IdentityToken };
         }
-      
+        #endregion
+
+
     }
 }

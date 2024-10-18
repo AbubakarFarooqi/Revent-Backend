@@ -32,12 +32,12 @@ public partial class ReventDbContext : DbContext
 
     public virtual DbSet<OpenIddictTokens> OpenIddictTokens { get; set; }
 
+    public virtual DbSet<Users> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AspNetUsers>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("'-infinity'::timestamp with time zone");
-
             entity.HasMany(d => d.Role).WithMany(p => p.User)
                 .UsingEntity<Dictionary<string, object>>(
                     "AspNetUserRoles",
@@ -53,6 +53,18 @@ public partial class ReventDbContext : DbContext
         modelBuilder.Entity<OpenIddictAuthorizations>(entity =>
         {
             entity.HasOne(d => d.Application).WithMany(p => p.OpenIddictAuthorizations).HasConstraintName("FK_OpenIddictAuthorizations_OpenIddictApplications_Application~");
+        });
+
+        modelBuilder.Entity<Users>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("users_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("now()");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("now()");
+
+            entity.HasOne(d => d.Aspnetuser).WithMany(p => p.Users)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("users_aspnetuserid_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

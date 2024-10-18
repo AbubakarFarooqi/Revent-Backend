@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Revent.Common.CommonDtos;
 using Revent.Common.CommonModels;
-using Revent.DataAccess.Implementation.Migrations;
 using Revent.DataAccess.Implementation.UnitOfWork;
+using Revent.EFCore.DataModel.Models;
 using Revent.Services.IServices;
 using System;
 using System.Collections.Generic;
@@ -18,40 +19,67 @@ namespace Revent.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public UserService(IMapper mapper, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public UserService(IMapper mapper, IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _configuration = configuration;
+            _cloudinaryService = cloudinaryService;
         }
-        public async Task<ApplicationUser?> AddUserAsync(UserRegistrationDto user, bool isAdmin = false)
+        public async Task<Users?> AddUserAsync(UserRegistrationDto user, bool isAdmin = false)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
 
-                var appUser = _mapper.Map<ApplicationUser>(user);
-                appUser.CreatedAt = DateTime.UtcNow;
-                appUser.UserName = user.Email;
+                var appUser = _mapper.Map<Users>(user);
 
-                bool isUserAdded = await _unitOfWork.UserRepository.AddAsync(appUser, user.Password);
+                //Adding asp user
+                IdentityUser aspUser = new IdentityUser();
+                
+                aspUser.UserName = user.Email;
+                aspUser.Email = user.Email;
 
-                if (!isUserAdded) return null;
+                bool isAspUserAdded = await _unitOfWork.UserRepository.AddAspUserAsync(aspUser, user.Password);
+
+
+                if (!isAspUserAdded) return null;
                 
                 bool isUserAddedInRole;
                 
                 if (isAdmin)
-                    isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "admin"});
+                    isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(aspUser, new List<string> { "admin"});
                 else
-                    isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "appUser" });
+                    isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(aspUser, new List<string> { "appUser" });
 
                 if (!isUserAddedInRole)
                 {
-                    await _unitOfWork.UserRepository.DeleteAsync(appUser);
+                    await _unitOfWork.UserRepository.DeleteAspUserAsync(aspUser);
                     return null;
                 }
+
+                appUser.Aspnetuserid = aspUser.Id;
+
+                if(user.ProfileImage  != null)
+                {
+                    string? url = await _cloudinaryService.UploadImage(user.ProfileImage);
+                    if(url == null)
+                    {
+                        await _unitOfWork.UserRepository.DeleteAspUserAsync(aspUser);
+                        return null;
+                    }
+                    appUser.Profileimage = url;
+                }
+
+                bool isAppUserAdded = _unitOfWork.UserRepository.AddAppUserAsync(appUser);
+
+                if (!isAppUserAdded)
+                {
+                    await _unitOfWork.UserRepository.DeleteAspUserAsync(aspUser);
+                    return null;
+                }
+
                 await _unitOfWork.CommitTransactionAsync();
 
                 return appUser;
@@ -63,25 +91,39 @@ namespace Revent.Services.Services
             }
         }
 
-        public async Task<ApplicationUser> AddUserWithoutPasswordAsync(UserRegistrationDto user)
+        public async Task<Users> AddUserWithoutPasswordAsync(UserRegistrationDto user)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
 
-                var appUser = _mapper.Map<ApplicationUser>(user);
-                appUser.CreatedAt = DateTime.UtcNow;
-                appUser.UserName = user.Email;
+                var appUser = _mapper.Map<Users>(user);
 
-                bool isUserAdded = await _unitOfWork.UserRepository.AddWithoutPasswordAsync(appUser);
-                
-                if (!isUserAdded) return null;
+                //Adding asp user
+                IdentityUser aspUser = new IdentityUser();
 
-                bool isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(appUser, new List<string> { "appUser1" });
+                aspUser.UserName = user.Email;
+                aspUser.Email = user.Email;
 
-                if(!isUserAddedInRole) 
+                bool isAspUserAdded = await _unitOfWork.UserRepository.AddWithoutPasswordAsync(aspUser);
+
+                if (!isAspUserAdded) return null;
+
+                bool isUserAddedInRole = await _unitOfWork.UserRepository.AddToRoleAsync(aspUser, new List<string> { "appUser" });
+
+                if (!isUserAddedInRole)
                 {
-                    await _unitOfWork.UserRepository.DeleteAsync(appUser);
+                    await _unitOfWork.UserRepository.DeleteAspUserAsync(aspUser);
+                    return null;
+                }
+
+                appUser.Aspnetuserid = aspUser.Id;
+
+                bool isAppUserAdded = _unitOfWork.UserRepository.AddAppUserAsync(appUser);
+
+                if (!isAppUserAdded)
+                {
+                    await _unitOfWork.UserRepository.DeleteAspUserAsync(aspUser);
                     return null;
                 }
 
@@ -95,8 +137,26 @@ namespace Revent.Services.Services
                 throw;
             }
         }
+        public async Task<bool> CheckPasswordAsync(Users user, string password)
+        {
+            try
+            {
+                var identityUser = await _unitOfWork.UserRepository.GetIdentityUser(user.Aspnetuserid);
+                return await _unitOfWork.UserRepository.CheckPasswordAsync(identityUser, password);
+            }
+            catch (Exception ex)
+            {
 
-        public async Task ChangeUserPasswordAsync(ApplicationUser user,ChangePasswordDto model)
+                throw;
+            }
+        }
+        public async Task<List<string>?> GetUserRoles(Users user)
+        {
+            var identityUser = await _unitOfWork.UserRepository.GetIdentityUser(user.Aspnetuserid);
+            return await _unitOfWork.UserRepository.GetUserRolesAsync(identityUser);
+        }
+
+        public async Task ChangeUserPasswordAsync(Users user, ChangePasswordDto model)
         {
             try
             {
@@ -117,8 +177,9 @@ namespace Revent.Services.Services
                 //        ErrorMessage = "New password cannot be same as old password"
                 //    };
                 //}
+                var identityUser = await _unitOfWork.UserRepository.GetIdentityUser(user.Aspnetuserid);
 
-                await _unitOfWork.UserRepository.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                await _unitOfWork.UserRepository.ChangePasswordAsync(identityUser, model.CurrentPassword, model.NewPassword);
                 await _unitOfWork.SaveChangesAsync();
                 return;
 
@@ -130,22 +191,19 @@ namespace Revent.Services.Services
 
         }
 
-        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+       
+
+        public async Task<Users?> FindUserAsync(string email)
         {
-            return await _unitOfWork.UserRepository.CheckPasswordAsync(user, password);
+            return await _unitOfWork.UserRepository.FindByEmailAsync(email);
         }
 
-        public async Task<ApplicationUser?> FindUserAsync(string email)
-        {
-            return await _unitOfWork.UserRepository.FindAsync(email);
-        }
-
-        public async Task<UserProfileDto> GetUserProfileAsync(string email)
+       /* public async Task<UserProfileDto> GetUserProfileAsync(string email)
         {
             try
             {
-                var user = await _unitOfWork.UserRepository.FindAsync(email);
-                
+                var user = await _unitOfWork.UserRepository.FindByEmailAsync(email);
+
                 if (user == null) return null;
 
                 var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
@@ -159,12 +217,18 @@ namespace Revent.Services.Services
             {
                 throw;
             }
-        }
+        }*/
 
-        public async Task<List<string>?> GetUserRoles(ApplicationUser user)
-        {
-            return await _unitOfWork.UserRepository.GetUserRolesAsync(user);
-        }
+        
+
+
+
+
+
+
+
+
+
 
         /* public async Task UpdateUserProfileAsync(UserProfileDto userProfile)
          {

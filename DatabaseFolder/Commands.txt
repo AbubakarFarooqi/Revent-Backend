@@ -1,0 +1,9 @@
+Get-ChildItem -Recurse -Directory | Where-Object { 
+    ($_.GetFileSystemInfos().Count -eq 0) 
+} | ForEach-Object { 
+    New-Item -Path $_.FullName -Name ".gitkeep" -ItemType "File" 
+}
+
+
+
+docker run -d --name my_postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=reventDb -v ${PWD}/pgdata:/var/lib/postgresql/data -p 5434:5432 postgres:16.3

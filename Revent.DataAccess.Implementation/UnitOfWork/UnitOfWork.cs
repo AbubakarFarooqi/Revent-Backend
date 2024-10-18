@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
-using Revent.Common.CommonModels;
 using Revent.DataAccess.Implementation.DbContexts;
 using Revent.DataAccess.Implementation.IRepositories;
 using Revent.DataAccess.Implementation.Repositories;
@@ -16,18 +15,20 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
     {
         private IDbContextTransaction? _currentTransaction;
         private readonly ReventDbContext _applicationDbContext;
-        private UserManager<ApplicationUser> _userManager;
+        private UserManager<IdentityUser> _userManager;
 
         private IUserRepository _userRepository;
 
         public UnitOfWork(
           ReventDbContext context,
-          UserManager<ApplicationUser> userManager)
+          UserManager<IdentityUser> userManager
+            )
         {
             _applicationDbContext = context;
             _userManager = userManager;
         }
-        public IUserRepository UserRepository => _userRepository ??= new UserRepository( _userManager);
+        //public IUserRepository UserRepository => _userRepository ??= new UserRepository( _userManager);
+        public IUserRepository UserRepository => _userRepository ??= new UserRepository(_userManager,_applicationDbContext);
         public async Task BeginTransactionAsync()
         {
             if (_currentTransaction != null)
@@ -46,17 +47,9 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
             }
             catch
             {
-                await RollbackTransactionAsync();
                 throw;
             }
-            finally
-            {
-                if (_currentTransaction != null)
-                {
-                    await _currentTransaction.DisposeAsync();
-                    _currentTransaction = null;
-                }
-            }
+            
         }
         public async Task RollbackTransactionAsync()
         {

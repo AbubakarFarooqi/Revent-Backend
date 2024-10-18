@@ -13,10 +13,6 @@ public partial class AspNetUsers
     [Key]
     public string Id { get; set; } = null!;
 
-    public string ProfilePicture { get; set; } = null!;
-
-    public string FullName { get; set; } = null!;
-
     [StringLength(256)]
     public string? UserName { get; set; }
 
@@ -49,8 +45,6 @@ public partial class AspNetUsers
 
     public int AccessFailedCount { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-
     [InverseProperty("User")]
     public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; } = new List<AspNetUserClaims>();
 
@@ -59,6 +53,9 @@ public partial class AspNetUsers
 
     [InverseProperty("User")]
     public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; } = new List<AspNetUserTokens>();
+
+    [InverseProperty("Aspnetuser")]
+    public virtual ICollection<Users> Users { get; set; } = new List<Users>();
 
     [ForeignKey("UserId")]
     [InverseProperty("User")]

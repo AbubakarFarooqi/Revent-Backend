@@ -65,7 +65,7 @@ builder.Services.AddDbContext<ReventDbContext>(options =>
     options.UseNpgsql(config.GetConnectionString("DefaultDbConnectionString"))
 );
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Revent.Common.CommonDtos;
 using Revent.Common.CommonModels;
 using Revent.Common.Constants;
@@ -26,15 +24,16 @@ namespace Revent.Auth.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterUser(UserRegistrationDto userRegistrationDto)
+        public async Task<IActionResult> RegisterUser([FromForm] UserRegistrationDto userRegistrationDto)
         {
-            
+
             try
             {
                 //this thing will be part of Sending email Api
-                //var isUserExist = await _userService.FindUserAsync(userRegistrationDto.Email);
-                //if (isUserExist != null) 
-                //    return BadRequest(new ApiError { Message = $"User with {userRegistrationDto.Email} is already exist", StatusCode = Constants.BAD_REQUEST_STATUS_CODE });
+
+                var isUserExist = await _userService.FindUserAsync(userRegistrationDto.Email);
+                if (isUserExist != null)
+                    return BadRequest(new ApiError { Message = $"User with {userRegistrationDto.Email} is already exist", StatusCode = Constants.BAD_REQUEST_STATUS_CODE });
 
                 _logger.LogInformation("Starting user registration process.");
 
@@ -73,7 +72,7 @@ namespace Revent.Auth.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unexpected error occurred while registering user with email {Email}.", userRegistrationDto.Email);
-                
+
                 return StatusCode(500, new ApiError
                 {
                     Message = "An unexpected error occurred.",
