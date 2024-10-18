@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Revent.DataAccess.Implementation.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository<Users>,IUserRepository
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ReventDbContext _dbContext;
 
-        public UserRepository(UserManager<IdentityUser> userManager, ReventDbContext dbContext)
+        public UserRepository(UserManager<IdentityUser> userManager, ReventDbContext dbContext):base(dbContext)
         {
             _userManager = userManager;
             _dbContext = dbContext;
@@ -79,11 +79,6 @@ namespace Revent.DataAccess.Implementation.Repositories
         {
             await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
-
-
-
-
-
 
         //public async Task<bool> RemoveFromRoleAsync(ApplicationUser user, List<string> roles)
         //{

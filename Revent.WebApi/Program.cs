@@ -47,12 +47,12 @@ builder.Services.AddSwaggerGen(setup =>
 });
 
 //Add Auto Mapper 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(Assembly.Load("Revent.Common"));
 
 //Add Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = config.GetConnectionString("RedisCacheSettings:ConnectionString");
+    options.Configuration = config["RedisCacheSettings:ConnectionString"];
     options.InstanceName = config["RedisCacheSettings:InstanceName"];
 });
 
@@ -87,17 +87,10 @@ builder.Services.AddAuthentication(options =>
 // Use Autofac as the DI container
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-// Configuring AutoFac for dependency injection
-//var servicesAssembly = typeof(Revent.Services).Assembly;
-builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
-{
-    builder.RegisterAssemblyTypes(Assembly.Load("Revent.Services"))
-    .Where(t => t.Namespace != null && t.Namespace.Contains("Services") || t.Namespace.Contains("IServices"))
-    .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name)
-    ?? throw new InvalidOperationException($"No matching interface found for {t.Name}")).InstancePerRequest();
-
-    builder.RegisterType<Revent.DataAccess.Implementation.UnitOfWork.UnitOfWork>().As<Revent.DataAccess.Implementation.UnitOfWork.IUnitOfWork>().InstancePerLifetimeScope();
-});
+// Configure Services
+builder.Host.ConfigureServices((context, services) =>
+    Revent.WebApi.ServiceRegistration.RegisterServices(services, context.Configuration)
+);
 
 // Configure CORS
 builder.Services.AddCors(options =>

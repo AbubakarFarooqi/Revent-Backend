@@ -39,6 +39,13 @@ services:
       - "5434:5432"
     networks:
       - default
+  redis:
+    image: redis:latest   # Use the official Redis image
+    container_name: redis_cache
+    ports:
+      - "6379:6379"       # Redis default port
+    networks:
+      - default
 
 networks:
   default:

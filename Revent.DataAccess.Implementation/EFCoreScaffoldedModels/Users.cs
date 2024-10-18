@@ -41,4 +41,10 @@ public partial class Users
     [ForeignKey("Aspnetuserid")]
     [InverseProperty("Users")]
     public virtual AspNetUsers Aspnetuser { get; set; } = null!;
+
+    [InverseProperty("Organizer")]
+    public virtual ICollection<Events> Events { get; set; } = new List<Events>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<Participants> Participants { get; set; } = new List<Participants>();
 }

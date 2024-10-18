@@ -10,6 +10,8 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
     public interface IUnitOfWork
     {
         IUserRepository UserRepository { get; }
+        ILookupRepository LookupRepository { get; }
+        IEventRepository EventRepository { get; }
 
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
