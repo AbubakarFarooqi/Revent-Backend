@@ -198,28 +198,34 @@ namespace Revent.Services.Services
             return await _unitOfWork.UserRepository.FindByEmailAsync(email);
         }
 
-       /* public async Task<UserProfileDto> GetUserProfileAsync(string email)
+        public async Task<Users?> FindUserById(int Id)
         {
-            try
-            {
-                var user = await _unitOfWork.UserRepository.FindByEmailAsync(email);
+            var user = await _unitOfWork.UserRepository.GetAsync(Id);
+            return user;
+        }
 
-                if (user == null) return null;
+        /* public async Task<UserProfileDto> GetUserProfileAsync(string email)
+         {
+             try
+             {
+                 var user = await _unitOfWork.UserRepository.FindByEmailAsync(email);
 
-                var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
+                 if (user == null) return null;
 
-                UserProfileDto userProfile = _mapper.Map<UserProfileDto>(user);
-                userProfile.Roles = userRoles;
+                 var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
 
-                return userProfile;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }*/
+                 UserProfileDto userProfile = _mapper.Map<UserProfileDto>(user);
+                 userProfile.Roles = userRoles;
 
-        
+                 return userProfile;
+             }
+             catch (Exception ex)
+             {
+                 throw;
+             }
+         }*/
+
+
 
 
 

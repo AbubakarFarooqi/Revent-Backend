@@ -18,6 +18,8 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         private UserManager<IdentityUser> _userManager;
 
         private IUserRepository _userRepository;
+        private ILookupRepository _lookupRepository;
+        private IEventRepository _eventRepository;
 
         public UnitOfWork(
           ReventDbContext context,
@@ -29,6 +31,10 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         }
         //public IUserRepository UserRepository => _userRepository ??= new UserRepository( _userManager);
         public IUserRepository UserRepository => _userRepository ??= new UserRepository(_userManager,_applicationDbContext);
+
+        public ILookupRepository LookupRepository => _lookupRepository ??= new LookupRepository(_applicationDbContext);
+        public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_applicationDbContext);
+
         public async Task BeginTransactionAsync()
         {
             if (_currentTransaction != null)
@@ -37,7 +43,6 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
             }
             _currentTransaction = await _applicationDbContext.Database.BeginTransactionAsync();
         }
-
         public async Task CommitTransactionAsync()
         {
             try
@@ -70,7 +75,6 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         {
             return await _applicationDbContext.SaveChangesAsync();
         }
-
         public async Task SaveChangesAsync()
         {
             await _applicationDbContext.SaveChangesAsync();

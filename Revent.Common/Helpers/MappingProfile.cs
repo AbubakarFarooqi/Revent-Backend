@@ -16,6 +16,9 @@ namespace Revent.Common.Helpers
                 .ForMember(dest => dest.Firstname , opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.Lastname , opt => opt.MapFrom(src => src.LastName));
 
+            CreateMap<EventCreateDto, Events>()
+                .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventTypeId));
+;
 
         }
     }

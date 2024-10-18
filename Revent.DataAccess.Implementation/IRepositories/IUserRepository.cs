@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Revent.DataAccess.Implementation.IRepositories
 {
-    public interface IUserRepository 
+    public interface IUserRepository : IBaseRepository<Users>
     {
         Task<bool> AddAspUserAsync(IdentityUser user, string password);
         bool AddAppUserAsync(Users user);
