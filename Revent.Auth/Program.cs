@@ -25,7 +25,7 @@ builder.Services.AddAutoMapper(Assembly.Load("Revent.Common"));
 //Add Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = config.GetConnectionString("RedisCacheSettings:ConnectionString");
+    options.Configuration = config["RedisCacheSettings:ConnectionString"];
     options.InstanceName = config["RedisCacheSettings:InstanceName"];
 });
 
