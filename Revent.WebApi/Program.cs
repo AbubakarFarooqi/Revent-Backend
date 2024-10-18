@@ -85,7 +85,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Use Autofac as the DI container
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+//builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 // Configure Services
 builder.Host.ConfigureServices((context, services) =>
