@@ -74,6 +74,7 @@ builder.Services.AddOpenIddict()
         // For those users which don't send client id and secret
         options.AcceptAnonymousClients();
     });
+//something
 
 // configuring Identity Options
 builder.Services.Configure<IdentityOptions>(options =>
