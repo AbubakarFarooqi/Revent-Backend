@@ -19,6 +19,10 @@ public partial class GroupChats
     [Column("updated_at", TypeName = "timestamp without time zone")]
     public DateTime? UpdatedAt { get; set; }
 
+    [Column("name")]
+    [StringLength(255)]
+    public string? Name { get; set; }
+
     [InverseProperty("GroupChat")]
     public virtual ICollection<Events> Events { get; set; } = new List<Events>();
 

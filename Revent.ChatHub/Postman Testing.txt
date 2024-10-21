@@ -1,0 +1,12 @@
+﻿// To Initiate Connection
+{
+ "protocol": "json",
+  "version": 1
+}
+
+//Join Group
+{"arguments":["groupId","userId"],"invocationId":"0","target":"JoinGroup","type":1}
+
+
+// Send Message in Group
+{"arguments":["groupId","userId","message"],"invocationId":"0","target":"SendMessageToGroup","type":1}

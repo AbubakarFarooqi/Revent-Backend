@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3175e929-de72-4e46-85f4-158c9c65fabe</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Revent.Common\Revent.Common.csproj" />
+    <ProjectReference Include="..\Revent.DataAccess.Implementation\Revent.DataAccess.Implementation.csproj" />
+    <ProjectReference Include="..\Revent.Services\Revent.Services.csproj" />
+  </ItemGroup>
+
+</Project>
