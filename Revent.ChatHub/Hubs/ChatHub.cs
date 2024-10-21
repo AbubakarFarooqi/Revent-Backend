@@ -4,13 +4,18 @@ namespace Revent.ChatHub.Hubs
 {
     public class ChatHub:Hub<IChatHub>
     {
-        public ChatHub() { }
+        ILogger<ChatHub> _logger;
+        public ChatHub(ILogger<ChatHub> logger)
+        {
+            _logger = logger;
+        }
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.RecieveMessage("Azan");
+            _logger.LogInformation($"userId has been connected");
+            await base.OnConnectedAsync();
         }
-        public async Task JoinGroup(string groupName)
+        public async Task JoinGroup(string groupId,)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId,groupName);
             await Clients.Group(groupName).RecieveMessage($"{Context.ConnectionId} has joined the group {groupName}.");
@@ -20,9 +25,7 @@ namespace Revent.ChatHub.Hubs
         {
             await Clients.Group(groupName).RecieveMessage(message);
         }
-        public async Task SendMessageToClient(string message)
-        {
-            await Clients.All.RecieveMessage(message);
-        }
+
+        
     }
 }
