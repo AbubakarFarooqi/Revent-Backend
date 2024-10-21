@@ -5,6 +5,7 @@ using Revent.DataAccess.Implementation.DbContexts;
 using Revent.DataAccess.Implementation.UnitOfWork;
 using Revent.Services.IServices;
 using Revent.Services.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -20,6 +21,9 @@ builder.Host.ConfigureLogging(logging =>
     logging.AddConsole();
 });
 
+//Add Auto Mapper 
+builder.Services.AddAutoMapper(Assembly.Load("Revent.Common"));
+
 // Configure database contexts
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseNpgsql(config.GetConnectionString("DefaultDbConnectionString"))
@@ -33,8 +37,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 
+// Adding Services in DI container
 services.AddScoped<IUnitOfWork,UnitOfWork>();
 services.AddScoped<IGroupChatService,GroupChatService>();
+services.AddScoped<IGroupMessageService,GroupMessageService>();
 
 var app = builder.Build();
 

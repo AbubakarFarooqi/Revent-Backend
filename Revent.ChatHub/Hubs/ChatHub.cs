@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Revent.Common.CommonDtos;
 using Revent.Services.IServices;
 
 namespace Revent.ChatHub.Hubs
@@ -7,10 +8,12 @@ namespace Revent.ChatHub.Hubs
     {
         private readonly ILogger<ChatHub> _logger;
         private readonly IGroupChatService _groupChatService;
-        public ChatHub(ILogger<ChatHub> logger, IGroupChatService groupChatService)
+        private readonly IGroupMessageService _groupMessageService;
+        public ChatHub(ILogger<ChatHub> logger, IGroupChatService groupChatService, IGroupMessageService groupMessageService)
         {
             _logger = logger;
             _groupChatService = groupChatService;
+            _groupMessageService = groupMessageService;
         }
 
         public override async Task OnConnectedAsync()
@@ -59,6 +62,12 @@ namespace Revent.ChatHub.Hubs
                 string groupName = groupChat.Name ?? "" + "_" + groupChat.Id;
 
                 await Clients.Group(groupName).RecieveMessage(message,participant.User.Firstname +" "+ participant.User.Lastname);
+
+                GroupMessageDto messageDto = new GroupMessageDto {GroupChatId = int.Parse(groupId), ParticipantId = participant.Id, Message = message };
+
+                await _groupMessageService.AddGroupMessageAsync(messageDto);
+
+
             }
             catch (Exception ex)
             {

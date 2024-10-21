@@ -21,6 +21,7 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         private ILookupRepository _lookupRepository;
         private IEventRepository _eventRepository;
         private IGroupChatRepository _groupChatRepository;
+        private IGroupMessageRepository _groupMessageRepository;
 
         public UnitOfWork(
           ReventDbContext context,
@@ -36,6 +37,7 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         public ILookupRepository LookupRepository => _lookupRepository ??= new LookupRepository(_applicationDbContext);
         public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_applicationDbContext);
         public IGroupChatRepository GroupChatRepository => _groupChatRepository ??= new GroupChatRepository(_applicationDbContext);
+        public IGroupMessageRepository GroupMessageRepository => _groupMessageRepository ??= new GroupMessageRepository(_applicationDbContext);
 
         public async Task BeginTransactionAsync()
         {
