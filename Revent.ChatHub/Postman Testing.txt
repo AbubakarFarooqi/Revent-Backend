@@ -1,0 +1,6 @@
+﻿{"arguments":["TestGroup"],"invocationId":"0","target":"SendMessageToClient","type":1}
+
+{
+ "protocol": "json",
+  "version": 1
+}

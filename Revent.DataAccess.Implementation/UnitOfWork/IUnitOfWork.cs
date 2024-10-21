@@ -12,6 +12,7 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         IUserRepository UserRepository { get; }
         ILookupRepository LookupRepository { get; }
         IEventRepository EventRepository { get; }
+        IGroupChatRepository GroupChatRepository { get; }
 
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
