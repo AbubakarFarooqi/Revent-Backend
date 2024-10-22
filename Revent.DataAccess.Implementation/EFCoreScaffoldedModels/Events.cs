@@ -53,6 +53,9 @@ public partial class Events
     [Column("group_chat_id")]
     public int? GroupChatId { get; set; }
 
+    [Column("is_deleted")]
+    public bool? IsDeleted { get; set; }
+
     [ForeignKey("EventType")]
     [InverseProperty("Events")]
     public virtual Lookups EventTypeNavigation { get; set; } = null!;

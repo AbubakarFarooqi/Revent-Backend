@@ -43,6 +43,13 @@ namespace Revent.Services.Services
             }
         }
 
+        public async Task DeleteEventAsync(int id)
+        {
+            await _unitOfWork.EventRepository.DeleteAsync(id);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task<Events> GetEventByIdAsync(int id)
         {
             return await _unitOfWork.EventRepository.GetAsync(id);
