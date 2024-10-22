@@ -65,6 +65,7 @@ public partial class ReventDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("events_pkey");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.EventTypeNavigation).WithMany(p => p.Events)

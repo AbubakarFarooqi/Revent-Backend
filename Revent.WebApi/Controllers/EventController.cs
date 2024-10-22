@@ -83,5 +83,41 @@ namespace Revent.WebApi.Controllers
                 return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error" + ex.ToString());
             }
         }
+
+        [HttpDelete("DeleteEvent/{eventId}")]
+        public async Task<IActionResult> DeleteEvent(int eventId)
+        {
+            try
+            {
+                _logger.LogInformation($"Deleting event with ID: {eventId}");
+
+                // Attempt to find the event by its ID
+                var eventEntity = await _eventService.GetEventByIdAsync(eventId);
+                if (eventEntity == null)
+                    return NotFound(new ApiError
+                    {
+                        Message = "Event not found in database",
+                        StatusCode = Constants.NOT_FOUND
+                    });
+
+                // Delete the event
+                await _eventService.DeleteEventAsync(eventId);
+
+                _logger.LogInformation($"Event with ID: {eventId} has been deleted");
+
+                //return Ok(new ApiResponse<string>
+                //{
+                //    Message = $"Event with ID: {eventId} has been deleted",
+                //    StatusCode = Constants.OK_STATUS_CODE
+                //});
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error: " + ex.ToString());
+            }
+        }
     }
 }
