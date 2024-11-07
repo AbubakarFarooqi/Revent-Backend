@@ -10,5 +10,6 @@ namespace Revent.Services.IServices
     public interface ICloudinaryService
     {
         Task<string?> UploadImage(IFormFile file);
+        Task<(string?,long?)> UploadImage(IFormFile file,int quality);
     }
 }
