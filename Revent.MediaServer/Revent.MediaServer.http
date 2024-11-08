@@ -1,0 +1,6 @@
+@Revent.MediaServer_HostAddress = http://localhost:5102
+
+GET {{Revent.MediaServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
