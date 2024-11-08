@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Revent.Common.CommonModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Revent.Services.IServices
     {
         Task<string?> UploadImage(IFormFile file);
         Task<(string?,long?)> UploadImage(IFormFile file,int quality);
+        Task<List<CloudinaryImageUploadResponse>> UploadImages(List<IFormFile> file, int quality);
     }
 }

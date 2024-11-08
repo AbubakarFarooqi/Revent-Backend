@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Revent.MediaServer/Revent.MediaServer.csproj", "Revent.MediaServer/"]
+COPY ["Revent.Common/Revent.Common.csproj", "Revent.Common/"]
+COPY ["Revent.DataAccess.Implementation/Revent.DataAccess.Implementation.csproj", "Revent.DataAccess.Implementation/"]
+COPY ["Revent.Services/Revent.Services.csproj", "Revent.Services/"]
 RUN dotnet restore "./Revent.MediaServer/Revent.MediaServer.csproj"
 COPY . .
 WORKDIR "/src/Revent.MediaServer"

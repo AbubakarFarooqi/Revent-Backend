@@ -80,6 +80,33 @@ app.MapPost("/uploadImage", async (HttpContext httpContext, ICloudinaryService _
     }
 }).DisableAntiforgery();
 
+app.MapPost("/uploadImages", async (HttpContext httpContext, ICloudinaryService _cloudinaryService, [FromForm] UploadImagesDto imagesDto) =>
+{
+    try
+    {
+        // Validate the model manually
+        if (!httpContext.Request.HasFormContentType || !httpContext.Request.Form.Files.Any())
+        {
+            return Results.BadRequest("No file uploaded.");
+        }
+
+        if (!MiniValidator.TryValidate(imagesDto, out var errors))
+        {
+            return Results.BadRequest(errors);
+        }
+        string? url;
+        long? size;
+        var uploadedImages = await _cloudinaryService.UploadImages(imagesDto.Images, cloudinaryOptions.ImageQuality);
+
+        return Results.Ok(new ApiResponse<UploadImagesResponseDto> { StatusCode = Constants.OK_STATUS_CODE, Data = new UploadImagesResponseDto { UplaodResult = uploadedImages } });
+
+    }
+    catch (Exception ex)
+    {
+        return Results.Json(new ApiError { Message = ex.ToString(), StatusCode = Constants.INTERNAL_SERVER_ERROR }, statusCode: Constants.INTERNAL_SERVER_ERROR);
+    }
+}).DisableAntiforgery();
+
 
 app.Run();
 
