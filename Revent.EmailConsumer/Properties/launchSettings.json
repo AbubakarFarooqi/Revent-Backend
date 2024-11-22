@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Revent.EmailConsumer": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

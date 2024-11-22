@@ -56,7 +56,7 @@ namespace Revent.Services.Services
         {
             Console.WriteLine("--> Message Bus Connection Shutdown");
         }
-
+        
         async Task IRabbitMQPublisher.PublishMessage(string routingKey, object message)
         {
             try
