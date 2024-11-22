@@ -15,6 +15,7 @@ namespace Revent.WebApi
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<ILookupService, LookupService>();
+            services.AddScoped<IRabbitMQPublisher, RabbitMQPublisher>();
 
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
 
@@ -26,6 +27,9 @@ namespace Revent.WebApi
                 cloudinarySettings.ApiSecret
             ));
             services.AddSingleton(cloudinary);
+
+            //Register RabbitMQ
+            services.Configure<RabbitMQSetting>(configuration.GetSection("RabbitMQ"));
         }
     }
 }

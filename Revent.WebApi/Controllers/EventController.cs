@@ -17,12 +17,15 @@ namespace Revent.WebApi.Controllers
         IUserService _userService;
         ILookupService _lookupService;
         IEventService _eventService;
-        public EventController(ILogger<EventController> logger,IUserService userService, ILookupService lookupService, IEventService eventService)
+        private readonly IRabbitMQPublisher _rabbitMQPublisher;
+
+        public EventController(ILogger<EventController> logger,IUserService userService, ILookupService lookupService, IEventService eventService, IRabbitMQPublisher rabbitMQPublisher)
         {
             _logger = logger;
             _userService = userService;
             _lookupService = lookupService;
             _eventService = eventService;
+            _rabbitMQPublisher = rabbitMQPublisher;
         }
 
         [HttpPost("CreateEvent")]
@@ -116,6 +119,21 @@ namespace Revent.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
+                return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error: " + ex.ToString());
+            }
+        }
+
+        [HttpPost("testMessageBus")]
+        public async Task<IActionResult> TestMessageBus()
+        {
+            try
+            {
+                await _rabbitMQPublisher.PublishMessage(Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE, new[] { "Azan", "Usman" });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                
                 return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error: " + ex.ToString());
             }
         }

@@ -12,5 +12,7 @@ namespace Revent.Common.Constants
         public static int OK_STATUS_CODE = 200;
         public static int INTERNAL_SERVER_ERROR = 500;
         public static int NOT_FOUND = 404;
+        public static string EMAIL_OTP_QUEUE = "otp.queue";
+        public static string MESSAGE_BUS_EMAIL_EXCHANGE_NAME = "email.exchange";
     }
 }
