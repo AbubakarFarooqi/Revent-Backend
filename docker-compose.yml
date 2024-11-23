@@ -13,7 +13,10 @@
 #       context: .
 #       dockerfile: Revent.WebApi/Dockerfile
 
-services:
+
+# in build we specify docker file 
+# when we run docker compose under the hood a network is created with each host for each service and name of host is same as service name
+services: # all the container are specified under services
   revent.auth:
     image: ${DOCKER_REGISTRY-}reventauth
     build:
@@ -44,6 +47,16 @@ services:
     container_name: redis_cache
     ports:
       - "6379:6379"       # Redis default port
+    networks:
+      - default
+  rabbitMQ:
+    image: rabbitmq:management
+    container_name: rabbitMQ_container
+    environment:
+      - hostname=rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672" 
     networks:
       - default
 
