@@ -24,6 +24,8 @@ namespace Revent.EmailConsumer.Consumers
         private IChannel _channel;
         private string _queueName;
 
+       
+
         public OtpQueueConsumer(IConfiguration configuration, IOptions<RabbitMQSetting> rabbitMQSettings, IServiceProvider serviceProvider)
         {
             _configuration = configuration;
@@ -43,27 +45,45 @@ namespace Revent.EmailConsumer.Consumers
                 Password = _rabbitMQSetting.Password ?? "guest"
             };
 
-            try
+            int retryCount = 0;
+            const int maxRetryAttempts = 10; // Maximum number of retries
+            const int baseDelayMs = 2000; // Base delay in milliseconds
+
+            while (retryCount < maxRetryAttempts)
             {
-                _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
-                _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
+                try
+                {
+                    Console.WriteLine($"Attempting to connect to RabbitMQ (Attempt {retryCount + 1})...");
+                    _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
+                    _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
 
-                //declare exchage
-                _channel.ExchangeDeclareAsync(Revent.Common.Constants.Constants.MESSAGE_BUS_EMAIL_EXCHANGE_NAME, type: ExchangeType.Topic).GetAwaiter().GetResult();
+                    // Declare exchange
+                    _channel.ExchangeDeclareAsync(Revent.Common.Constants.Constants.MESSAGE_BUS_EMAIL_EXCHANGE_NAME, type: ExchangeType.Topic).GetAwaiter().GetResult();
 
-                //declare queues
-                _channel.QueueDeclareAsync(queue: Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE, durable: true, exclusive: false, autoDelete: false).GetAwaiter().GetResult();
-                _channel.QueueBindAsync(queue: Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE, exchange: Revent.Common.Constants.Constants.MESSAGE_BUS_EMAIL_EXCHANGE_NAME, routingKey: Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE).GetAwaiter().GetResult();
+                    // Declare queues
+                    _channel.QueueDeclareAsync(queue: Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE, durable: true, exclusive: false, autoDelete: false).GetAwaiter().GetResult();
+                    _channel.QueueBindAsync(queue: Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE, exchange: Revent.Common.Constants.Constants.MESSAGE_BUS_EMAIL_EXCHANGE_NAME, routingKey: Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE).GetAwaiter().GetResult();
 
-                _connection.ConnectionShutdownAsync += RabbitMQConnectionShutdown;
+                    _connection.ConnectionShutdownAsync += RabbitMQConnectionShutdown;
 
-                Console.WriteLine("--> Connected to message Bus");
+                    Console.WriteLine("--> Connected to message bus");
+                    break; // Exit the retry loop on success
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    Console.WriteLine($"--> Failed to connect to RabbitMQ: {ex.Message}");
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("--> Could not connect to Message Bus");
-                throw ex;
+                    if (retryCount >= maxRetryAttempts)
+                    {
+                        Console.WriteLine("--> Maximum retry attempts reached. Application will continue running without RabbitMQ.");
+                        break;
+                    }
+
+                    int delay = baseDelayMs * (int)Math.Pow(2, retryCount - 1); // Exponential backoff
+                    Console.WriteLine($"Retrying in {delay / 1000} seconds...");
+                    Task.Delay(delay).GetAwaiter().GetResult();
+                }
             }
         }
 
