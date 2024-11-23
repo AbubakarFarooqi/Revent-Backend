@@ -11,6 +11,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Revent.EmailConsumer/Revent.EmailConsumer.csproj", "Revent.EmailConsumer/"]
+COPY ["Revent.Common/Revent.Common.csproj", "Revent.Common/"]
 RUN dotnet restore "./Revent.EmailConsumer/Revent.EmailConsumer.csproj"
 COPY . .
 WORKDIR "/src/Revent.EmailConsumer"

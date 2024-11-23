@@ -28,6 +28,11 @@ services: # all the container are specified under services
     build:
       context: .
       dockerfile: Revent.WebApi/Dockerfile
+  revent.emailconsumer:
+    image: ${DOCKER_REGISTRY-}reventemailconsumer
+    build:
+        context: .
+        dockerfile: Revent.EmailConsumer/Dockerfile
 
   postgres:
     image: postgres:16.3
