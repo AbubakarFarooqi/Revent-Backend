@@ -115,7 +115,7 @@ namespace Revent.EmailConsumer.Consumers
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                Console.WriteLine($" [x] Received message from {_queueName}: {message}");
+                Console.WriteLine($"-> Received message from {_queueName}: {message}");
 
                 using (var scope = _serviceScopeProvider.CreateScope())
                 {
@@ -123,7 +123,7 @@ namespace Revent.EmailConsumer.Consumers
                     var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
                     emailService.SendMail(subject: "THis is subject", body: "This is body", to: "muhammadabubakarsiddiquefarooq@gmail.com");
                 }
-                Console.WriteLine($"--> Message Recieved ${message}");
+                Console.WriteLine($"--> Message has been processed at ${DateTime.Now}");
                 //channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 

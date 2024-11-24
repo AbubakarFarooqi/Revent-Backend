@@ -12,6 +12,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Revent.EmailConsumer/Revent.EmailConsumer.csproj", "Revent.EmailConsumer/"]
 COPY ["Revent.Common/Revent.Common.csproj", "Revent.Common/"]
+COPY ["Revent.Services/Revent.Services.csproj", "Revent.Services/"]
 RUN dotnet restore "./Revent.EmailConsumer/Revent.EmailConsumer.csproj"
 COPY . .
 WORKDIR "/src/Revent.EmailConsumer"
