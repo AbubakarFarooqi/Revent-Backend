@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Revent.Common.CommonModels;
+using Revent.Services.IServices;
+using Revent.Services.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,18 +21,18 @@ namespace Revent.EmailConsumer.Consumers
     {
         private readonly IConfiguration _configuration;
         private readonly RabbitMQSetting _rabbitMQSetting;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _serviceScopeProvider;
         private IConnection _connection;
         private IChannel _channel;
         private string _queueName;
 
        
 
-        public OtpQueueConsumer(IConfiguration configuration, IOptions<RabbitMQSetting> rabbitMQSettings, IServiceProvider serviceProvider)
+        public OtpQueueConsumer(IConfiguration configuration, IOptions<RabbitMQSetting> rabbitMQSettings, IServiceScopeFactory serviceScopeProvider)
         {
             _configuration = configuration;
             _rabbitMQSetting = rabbitMQSettings.Value;
-            _serviceProvider = serviceProvider;
+            _serviceScopeProvider = serviceScopeProvider;
             _queueName = Revent.Common.Constants.Constants.EMAIL_OTP_QUEUE;
 
             InitializeRabbitMQ();
@@ -94,12 +96,13 @@ namespace Revent.EmailConsumer.Consumers
 
         public override void Dispose()
         {
-            base.Dispose();
+            
             if (_channel.IsOpen)
             {
                 _connection.CloseAsync();
                 _channel.CloseAsync();
             }
+            base.Dispose();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -114,9 +117,12 @@ namespace Revent.EmailConsumer.Consumers
 
                 Console.WriteLine($" [x] Received message from {_queueName}: {message}");
 
-                //using var scope = _serviceProvider.CreateScope();
-                //var emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
-                //await emailService.ProcessMessageAsync(message);
+                using (var scope = _serviceScopeProvider.CreateScope())
+                {
+
+                    var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+                    emailService.SendMail(subject: "THis is subject", body: "This is body", to: "muhammadabubakarsiddiquefarooq@gmail.com");
+                }
                 Console.WriteLine($"--> Message Recieved ${message}");
                 //channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };

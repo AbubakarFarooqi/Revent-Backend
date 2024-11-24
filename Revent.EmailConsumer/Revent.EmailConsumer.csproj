@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Revent.Common\Revent.Common.csproj" />
+    <ProjectReference Include="..\Revent.Services\Revent.Services.csproj" />
   </ItemGroup>
     <ItemGroup>
 	    <None Update="appsettings.json">
