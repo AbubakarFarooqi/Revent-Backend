@@ -27,7 +27,9 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.ChatHub", "Revent.ChatHub\Revent.ChatHub.csproj", "{568D9EE1-7375-4A34-8071-9AA4F015BDEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.MediaServer", "Revent.MediaServer\Revent.MediaServer.csproj", "{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.MediaServer", "Revent.MediaServer\Revent.MediaServer.csproj", "{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.EmailConsumer", "Revent.EmailConsumer\Revent.EmailConsumer.csproj", "{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{65F1C80B-7456-4CEC-8BDB-6C3A8B3934F2} = {18E9F6CF-E8C4-4BBD-9E21-D9C26371FFC4}
 		{568D9EE1-7375-4A34-8071-9AA4F015BDEF} = {18E9F6CF-E8C4-4BBD-9E21-D9C26371FFC4}
 		{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE} = {18E9F6CF-E8C4-4BBD-9E21-D9C26371FFC4}
+		{3A10DB6C-B504-4FCA-951C-16DDA1D8995D} = {18E9F6CF-E8C4-4BBD-9E21-D9C26371FFC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F7A7F567-0C45-46A9-BC32-1920EC389E55}
