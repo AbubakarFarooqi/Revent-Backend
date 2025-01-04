@@ -59,7 +59,7 @@ namespace Revent.WebApi.Controllers
                 eventCreateDto.Organizer = organizaer;
                 eventCreateDto.EventType = eventTypeLkp;
 
-                await _eventService.AddEventAsync(eventCreateDto);
+                //await _eventService.AddEventAsync(eventCreateDto);
                 
                 _logger.LogInformation("Event Has Been Created");
 
