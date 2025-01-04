@@ -29,7 +29,7 @@ namespace Revent.WebApi
             services.AddSingleton(cloudinary);
 
             //Register RabbitMQ
-            services.Configure<RabbitMQSetting>(configuration.GetSection("RabbitMQ"));
+            //services.Configure<RabbitMQSetting>(configuration.GetSection("RabbitMQ"));
         }
     }
 }

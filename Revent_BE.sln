@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.ChatHub", "Revent.Ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.MediaServer", "Revent.MediaServer\Revent.MediaServer.csproj", "{9520EEC9-E3EE-433B-8A2C-6C11BA6BBEFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revent.EmailConsumer", "Revent.EmailConsumer\Revent.EmailConsumer.csproj", "{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Revent.EmailConsumer", "Revent.EmailConsumer\Revent.EmailConsumer.csproj", "{3A10DB6C-B504-4FCA-951C-16DDA1D8995D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,7 +64,6 @@ Global
 		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27E773CA-05CC-43AC-8A85-5C9DB6A08834}.Release|Any CPU.Build.0 = Release|Any CPU
 		{568D9EE1-7375-4A34-8071-9AA4F015BDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{568D9EE1-7375-4A34-8071-9AA4F015BDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{568D9EE1-7375-4A34-8071-9AA4F015BDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU

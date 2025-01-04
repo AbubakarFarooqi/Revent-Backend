@@ -38,6 +38,9 @@ public partial class Users
     [Column("updatedat", TypeName = "timestamp without time zone")]
     public DateTime Updatedat { get; set; }
 
+    [Column("two_factor_secret", TypeName = "character varying")]
+    public string? TwoFactorSecret { get; set; }
+
     [ForeignKey("Aspnetuserid")]
     [InverseProperty("Users")]
     public virtual AspNetUsers Aspnetuser { get; set; } = null!;

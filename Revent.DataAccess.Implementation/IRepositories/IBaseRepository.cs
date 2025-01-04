@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Revent.DataAccess.Implementation.DbContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Revent.DataAccess.Implementation.IRepositories
 {
         public interface IBaseRepository<T> where T : class
         {
+            
             Task AddAsync(T entity);
             void UpdateAsync(T entity);
             Task DeleteAsync(dynamic id);

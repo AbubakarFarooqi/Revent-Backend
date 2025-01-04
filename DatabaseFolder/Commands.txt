@@ -9,4 +9,5 @@ Get-ChildItem -Recurse -Directory | Where-Object {
 docker run -d --name my_postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=reventDb -v ${PWD}/pgdata:/var/lib/postgresql/data -p 5434:5432 postgres:16.3
 
 
-docker run -d -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=reventDb -v ${PWD}/pgdata:/var/lib/postgresql/data -p 5434:5432 postgres:16.3
+docker run -d -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=reventDb -v %cd%/pgdata:/var/lib/postgresql/data -p 5434:5432 postgres:16.3
+
