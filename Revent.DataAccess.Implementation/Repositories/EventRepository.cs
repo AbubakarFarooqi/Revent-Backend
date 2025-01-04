@@ -23,7 +23,6 @@ namespace Revent.DataAccess.Implementation.Repositories
             if (eventToDelete != null)
             {
                 eventToDelete.IsDeleted = true;
-                _dbContext.SaveChanges();
             }
             return eventToDelete;
         }
