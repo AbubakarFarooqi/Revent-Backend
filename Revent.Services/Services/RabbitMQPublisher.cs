@@ -48,7 +48,7 @@ namespace Revent.Services.Services
             catch (Exception ex)
             {
                 Console.WriteLine("--> Could not connect to Message Bus");
-                throw ex;
+                //throw ex;
             }
         }
 

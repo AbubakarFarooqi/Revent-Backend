@@ -16,5 +16,16 @@ namespace Revent.DataAccess.Implementation.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task<Events?> DeleteEvent(int id)
+        {
+            var eventToDelete = _dbContext.Events.FirstOrDefault(x => x.Id == id);
+            if (eventToDelete != null)
+            {
+                eventToDelete.IsDeleted = true;
+                _dbContext.SaveChanges();
+            }
+            return eventToDelete;
+        }
     }
 }

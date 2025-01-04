@@ -45,7 +45,7 @@ namespace Revent.Services.Services
 
         public async Task DeleteEventAsync(int id)
         {
-            await _unitOfWork.EventRepository.DeleteAsync(id);
+            await _unitOfWork.EventRepository.DeleteEvent(id);
 
             await _unitOfWork.SaveChangesAsync();
         }
