@@ -14,6 +14,7 @@ using Revent.Common.CommonDtos;
 using Revent.Common.CommonModels;
 using Microsoft.AspNetCore.Identity;
 using Revent.EFCore.DataModel.Models;
+using Revent.Common.Constants;
 
 namespace Revent.Auth.Controllers
 {
@@ -137,12 +138,12 @@ namespace Revent.Auth.Controllers
                 // Exchange the authorization code for an access token
                 var googleTokenResponse = await ExchangeCodeForTokenAsync(code);
 
-                if (googleTokenResponse == null || string.IsNullOrEmpty(googleTokenResponse.id_token))  return Redirect("http://localhost:3000/failedGoogleAuth");
+                if (googleTokenResponse == null || string.IsNullOrEmpty(googleTokenResponse.id_token)) return BadRequest(new ApiError { Message = "Could not process auth code" ,StatusCode = Constants.BAD_REQUEST_STATUS_CODE});
 
                 // Validate the Google ID token
                 var validPayload = await ValidateGoogleToken(googleTokenResponse.id_token);
 
-                if (validPayload == null)   return Redirect("http://localhost:3000/failedGoogleAuth");
+                if (validPayload == null)   return BadRequest(new ApiError { Message = "Could not get payload from google id token", StatusCode = Constants.BAD_REQUEST_STATUS_CODE });
 
                 var httpClient = _httpClientFactory.CreateClient();
 
@@ -163,7 +164,7 @@ namespace Revent.Auth.Controllers
 
                 var response = await httpClient.SendAsync(tokenRequest);
 
-                if(!response.IsSuccessStatusCode) return Redirect("http://localhost:3000/failedGoogleAuth");
+                if(!response.IsSuccessStatusCode) return BadRequest(new ApiError { Message = "Could not create token", StatusCode = Constants.BAD_REQUEST_STATUS_CODE });
 
                 var content = await response.Content.ReadAsStringAsync();
 
@@ -172,14 +173,14 @@ namespace Revent.Auth.Controllers
                     PropertyNameCaseInsensitive = true
                 });
 
-                if (tokenResponse == null)  return Redirect("http://localhost:3000/failedGoogleAuth");
-                
-                var redirectUrl = $"http://localhost:3000/dashboard?access_token={tokenResponse?.access_token}&refresh_token={tokenResponse?.refresh_token}&expires_in={tokenResponse?.expires_in}";
-                return Redirect(redirectUrl);
+                if (tokenResponse == null) return BadRequest(new ApiError { Message = "Cannot deserialize token response", StatusCode = Constants.BAD_REQUEST_STATUS_CODE });
+
+
+                return Ok(new ApiResponse<TokenResponseDto> { Data = tokenResponse, StatusCode = Constants.OK_STATUS_CODE });
             }
             catch(Exception ex)
             {
-                return Redirect("http://localhost:3000/failedGoogleAuth");
+                return StatusCode(Constants.INTERNAL_SERVER_ERROR,new ApiError { Message = ex.Message,StatusCode = Constants.INTERNAL_SERVER_ERROR});
             }
         }
 
