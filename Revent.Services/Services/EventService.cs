@@ -54,5 +54,28 @@ namespace Revent.Services.Services
         {
             return await _unitOfWork.EventRepository.GetAsync(id);
         }
+
+        public async Task UpdateEventAsync(EventUpdateDto eventUpdateDto)
+        {
+
+            try
+            {
+                await _unitOfWork.BeginTransactionAsync();
+
+                var entity = await _unitOfWork.EventRepository.GetAsync(eventUpdateDto.Id);
+
+                _mapper.Map(eventUpdateDto, entity); 
+
+                _unitOfWork.EventRepository.UpdateAsync(entity);
+
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw ex;
+            }
+
+        }
     }
 }

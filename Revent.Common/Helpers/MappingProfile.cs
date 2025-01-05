@@ -19,6 +19,10 @@ namespace Revent.Common.Helpers
             CreateMap<EventCreateDto, Events>()
                 .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventTypeId));
 
+            CreateMap<EventUpdateDto, Events>()
+                .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventTypeId));
+
+
             CreateMap<GroupMessageDto, GroupMessages>();
             
 

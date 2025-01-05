@@ -13,5 +13,6 @@ namespace Revent.Services.IServices
         Task AddEventAsync(EventCreateDto eventCreateDto );
         Task<Events> GetEventByIdAsync(int id );
         Task DeleteEventAsync(int id);
+        Task UpdateEventAsync(EventUpdateDto eventUpdateDto);
     }
 }
