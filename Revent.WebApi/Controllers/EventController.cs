@@ -74,7 +74,7 @@ namespace Revent.WebApi.Controllers
         }
 
         [HttpGet("GetEventById")]
-        public async Task<IActionResult> CreateEvent(int eventId)
+        public async Task<IActionResult> GetEventById(int eventId)
         {
             try
             {
@@ -132,6 +132,43 @@ namespace Revent.WebApi.Controllers
             }
         }
 
+
+        [HttpPut("UpdateEvent")]
+        public async Task<IActionResult> UpdateEvent(EventUpdateDto eventUpdateDto)
+        {
+            try
+            {
+                _logger.LogInformation($"Updating event with ID: {eventUpdateDto.Id}");
+
+                // Attempt to find the event by its ID
+                var eventEntity = await _eventService.GetEventByIdAsync(eventUpdateDto.Id);
+                if (eventEntity == null)
+                    return NotFound(new ApiError
+                    {
+                        Message = "Event not found in database",
+                        StatusCode = Constants.NOT_FOUND
+                    });
+
+                // Updating the event
+                await _eventService.UpdateEventAsync(eventUpdateDto);
+
+                _logger.LogInformation($"Event with ID: {eventUpdateDto.Id} has been Updated");
+
+                //return Ok(new ApiResponse<string>
+                //{
+                //    Message = $"Event with ID: {eventId} has been deleted",
+                //    StatusCode = Constants.OK_STATUS_CODE
+                //});
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error: " + ex.ToString());
+            }
+        }
+
         //[HttpPost("testMessageBus")]
         //public async Task<IActionResult> TestMessageBus()
         //{
@@ -142,7 +179,7 @@ namespace Revent.WebApi.Controllers
         //    }
         //    catch (Exception ex)
         //    {
-                
+
         //        return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error: " + ex.ToString());
         //    }
         //}
