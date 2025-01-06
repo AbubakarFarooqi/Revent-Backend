@@ -43,7 +43,7 @@ public partial class Users
     public string? TwoFactorSecret { get; set; }
 
     [Column("phone_number", TypeName = "character varying")]
-    public string? PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; } = null!;
 
     [ForeignKey("Aspnetuserid")]
     [InverseProperty("Users")]
@@ -51,6 +51,12 @@ public partial class Users
 
     [InverseProperty("Organizer")]
     public virtual ICollection<Events> Events { get; set; } = new List<Events>();
+
+    [InverseProperty("ContactNumberNavigation")]
+    public virtual ICollection<Organizations> OrganizationsContactNumberNavigation { get; set; } = new List<Organizations>();
+
+    [InverseProperty("User")]
+    public virtual Organizations? OrganizationsUser { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<Participants> Participants { get; set; } = new List<Participants>();

@@ -14,5 +14,7 @@ namespace Revent.Common.Constants
         public static int NOT_FOUND = 404;
         public static string EMAIL_OTP_QUEUE = "otp.queue";
         public static string MESSAGE_BUS_EMAIL_EXCHANGE_NAME = "email.exchange";
+        
+        public static string ORGANIZATION_TYPE_LOOKUP = "OrganizationType";
     }
 }
