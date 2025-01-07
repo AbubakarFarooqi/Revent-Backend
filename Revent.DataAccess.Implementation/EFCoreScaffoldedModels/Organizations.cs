@@ -27,6 +27,9 @@ public partial class Organizations
     [StringLength(255)]
     public string? Address { get; set; }
 
+    [Column("is_deleted")]
+    public bool IsDeleted { get; set; }
+
     [ForeignKey("ContactNumber")]
     [InverseProperty("OrganizationsContactNumberNavigation")]
     public virtual Users? ContactNumberNavigation { get; set; }

@@ -45,6 +45,27 @@ namespace Revent.Services.Services
 
         }
 
+        public async Task DeleteAsync(int id)
+        {
+
+            try
+            {
+                await _unitOfWork.BeginTransactionAsync();
+
+                var organization = await GetByIdAsync(id);
+                organization.IsDeleted = true;
+                _unitOfWork.OrganizationRepository.UpdateAsync(organization);
+
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw ex;
+            }
+
+        }
+
         public async Task<Organizations> GetByIdAsync(int id)
         {
             var organization = await _unitOfWork.OrganizationRepository.GetAsync(id);

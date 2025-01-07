@@ -15,6 +15,7 @@ namespace Revent.Services.IServices
         Task<Organizations> GetByUserIdAsync(int userId);
         Task CreateAsync(OrganizationCreateDto organizationDto);
         Task UpdateAsync(OrganizationUpdateDto organizationDto);
+        Task DeleteAsync(int id);
         //Task DeleteAsync(int id);
     }
 }

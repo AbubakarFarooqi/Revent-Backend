@@ -166,5 +166,32 @@ namespace Revent.WebApi.Controllers
             }
 
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteOrganization(int id)
+        {
+            try
+            {
+
+                _logger.LogInformation($"Starting Deleteing organization with Id {id}");
+
+                var organization = await _organizationService.GetByIdAsync(id);
+
+                if (organization == null) return NotFound(new ApiResponse<string> { Message = $"organization with Id {id} not found in Database", StatusCode = Constants.NOT_FOUND });
+
+                await _organizationService.DeleteAsync(id); ;
+
+                _logger.LogInformation("Organization Has Been Deleted");
+
+                return Ok(new ApiResponse<Organizations> { Message = "Organization Has been deletd", StatusCode = Constants.OK_STATUS_CODE });
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error" + ex.ToString());
+            }
+
+        }
     }
 }
