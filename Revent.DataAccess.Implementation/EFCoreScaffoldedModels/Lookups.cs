@@ -23,4 +23,7 @@ public partial class Lookups
 
     [InverseProperty("EventTypeNavigation")]
     public virtual ICollection<Events> Events { get; set; } = new List<Events>();
+
+    [InverseProperty("OrganizationTypeNavigation")]
+    public virtual ICollection<Organizations> Organizations { get; set; } = new List<Organizations>();
 }

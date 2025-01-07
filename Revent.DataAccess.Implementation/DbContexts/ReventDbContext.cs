@@ -40,6 +40,8 @@ public partial class ReventDbContext : DbContext
 
     public virtual DbSet<OpenIddictTokens> OpenIddictTokens { get; set; }
 
+    public virtual DbSet<Organizations> Organizations { get; set; }
+
     public virtual DbSet<Participants> Participants { get; set; }
 
     public virtual DbSet<Users> Users { get; set; }
@@ -106,6 +108,24 @@ public partial class ReventDbContext : DbContext
         modelBuilder.Entity<OpenIddictAuthorizations>(entity =>
         {
             entity.HasOne(d => d.Application).WithMany(p => p.OpenIddictAuthorizations).HasConstraintName("FK_OpenIddictAuthorizations_OpenIddictApplications_Application~");
+        });
+
+        modelBuilder.Entity<Organizations>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("organizations_pkey");
+
+            entity.HasOne(d => d.ContactNumberNavigation).WithMany(p => p.OrganizationsContactNumberNavigation)
+                .HasPrincipalKey(p => p.PhoneNumber)
+                .HasForeignKey(d => d.ContactNumber)
+                .HasConstraintName("organizations_contact_number_fkey");
+
+            entity.HasOne(d => d.OrganizationTypeNavigation).WithMany(p => p.Organizations)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("organizations_organization_type_fkey");
+
+            entity.HasOne(d => d.User).WithOne(p => p.OrganizationsUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("organizations_user_id_fkey");
         });
 
         modelBuilder.Entity<Participants>(entity =>

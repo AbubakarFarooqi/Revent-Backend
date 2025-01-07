@@ -21,6 +21,10 @@ namespace Revent.Common.CommonDtos
         [StringLength(50)]
         public string LastName { get; set; }
 
+        [PhoneNumberValidator]
+        public string? PhoneNumber { get; set; }
+
+
         [AllowedExtensionForPictures(new string[] { ".jpg", ".jpeg", ".png" })]
         public IFormFile? ProfileImage { get; set; }
         public string? ProfileImageUrl { get; set; }
