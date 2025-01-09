@@ -22,6 +22,9 @@ public partial class Tickets
     [Column("price")]
     public int Price { get; set; }
 
+    [Column("is_deleted")]
+    public bool IsDeleted { get; set; }
+
     [ForeignKey("EventId")]
     [InverseProperty("Tickets")]
     public virtual Events Event { get; set; } = null!;

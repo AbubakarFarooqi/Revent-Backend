@@ -10,6 +10,7 @@ using Revent.EFCore.DataModel.Models;
 using Revent.Common.CommonDtos;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Revent.WebApi.Controllers
 {
@@ -116,11 +117,40 @@ namespace Revent.WebApi.Controllers
                 return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error" + ex.ToString());
             }
         }
-        //    [HttpDelete]
-        //    public async Task<IActionResult> Delete(int id)
-        //    {
-        //        _ticketService.DeleteTicket(id);
-        //        return Ok();
-        //    }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTicket(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Deleting ticket with ID: {id}");
+
+                // Attempt to find the event by its ID
+                var eventEntity = await _ticketService.GetByIdAsync(id);
+                if (eventEntity == null)
+                    return NotFound(new ApiError
+                    {
+                        Message = "Ticket not found in database",
+                        StatusCode = Constants.NOT_FOUND
+                    });
+
+                // Delete the event
+                await _ticketService.DeleteAsync(id);
+
+                _logger.LogInformation($"Ticket with ID: {id} has been deleted");
+
+                //return Ok(new ApiResponse<string>
+                //{
+                //    Message = $"Event with ID: {eventId} has been deleted",
+                //    StatusCode = Constants.OK_STATUS_CODE
+                //});
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return StatusCode(Constants.INTERNAL_SERVER_ERROR, "Internal Server Error: " + ex.ToString());
+            }
+        }
     }
 }
