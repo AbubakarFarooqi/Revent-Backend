@@ -17,6 +17,7 @@ namespace Revent.WebApi
             services.AddScoped<ILookupService, LookupService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IRabbitMQPublisher, RabbitMQPublisher>();
+            services.AddScoped<ITicketService, TicketService>();
 
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
 

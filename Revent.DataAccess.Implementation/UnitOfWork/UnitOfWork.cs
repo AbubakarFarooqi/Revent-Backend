@@ -23,6 +23,7 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         private IGroupChatRepository _groupChatRepository;
         private IGroupMessageRepository _groupMessageRepository;
         private IOrganizationRepository _organizationRepository;
+        private ITicketRepository _ticketRepository;
 
         public UnitOfWork(
           ReventDbContext context,
@@ -40,6 +41,8 @@ namespace Revent.DataAccess.Implementation.UnitOfWork
         public IGroupChatRepository GroupChatRepository => _groupChatRepository ??= new GroupChatRepository(_applicationDbContext);
         public IGroupMessageRepository GroupMessageRepository => _groupMessageRepository ??= new GroupMessageRepository(_applicationDbContext);
         public IOrganizationRepository OrganizationRepository => _organizationRepository ??= new OrganizationRepository(_applicationDbContext);
+
+        public ITicketRepository TicketRepository => _ticketRepository ??= new TicketRepository(_applicationDbContext);
 
         public async Task BeginTransactionAsync()
         {

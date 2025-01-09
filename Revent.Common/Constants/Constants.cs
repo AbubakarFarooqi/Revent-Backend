@@ -16,5 +16,7 @@ namespace Revent.Common.Constants
         public static string MESSAGE_BUS_EMAIL_EXCHANGE_NAME = "email.exchange";
         
         public static string ORGANIZATION_TYPE_LOOKUP = "OrganizationType";
+        
+        public static List<string> TICKET_TYPE_LOOKUP = new List<string> { "Free", "Paid" };
     }
 }

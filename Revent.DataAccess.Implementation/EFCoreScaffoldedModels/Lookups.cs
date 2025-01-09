@@ -26,4 +26,7 @@ public partial class Lookups
 
     [InverseProperty("OrganizationTypeNavigation")]
     public virtual ICollection<Organizations> Organizations { get; set; } = new List<Organizations>();
+
+    [InverseProperty("TicketTypeNavigation")]
+    public virtual ICollection<Tickets> Tickets { get; set; } = new List<Tickets>();
 }

@@ -44,6 +44,8 @@ public partial class ReventDbContext : DbContext
 
     public virtual DbSet<Participants> Participants { get; set; }
 
+    public virtual DbSet<Tickets> Tickets { get; set; }
+
     public virtual DbSet<Users> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -137,6 +139,19 @@ public partial class ReventDbContext : DbContext
             entity.HasOne(d => d.GroupChat).WithMany(p => p.Participants).HasConstraintName("fk_group_chat");
 
             entity.HasOne(d => d.User).WithMany(p => p.Participants).HasConstraintName("fk_user");
+        });
+
+        modelBuilder.Entity<Tickets>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("tickets_pkey");
+
+            entity.HasOne(d => d.Event).WithMany(p => p.Tickets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_event_id");
+
+            entity.HasOne(d => d.TicketTypeNavigation).WithMany(p => p.Tickets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_ticket_type");
         });
 
         modelBuilder.Entity<Users>(entity =>
