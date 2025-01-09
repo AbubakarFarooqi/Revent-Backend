@@ -25,8 +25,11 @@ namespace Revent.Common.Helpers
             CreateMap<OrganizationCreateDto, Organizations>();
             CreateMap<OrganizationUpdateDto, Organizations>();
 
-
             CreateMap<GroupMessageDto, GroupMessages>();
+
+            CreateMap<TicketDto, Tickets>()
+                .ForMember(dest => dest.TicketType, opt => opt.MapFrom(src => src.TicketTypeId));
+
             
 
 
